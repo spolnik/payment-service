@@ -1,2 +1,3 @@
-# payment-service
-Example implementation of REST payment service using Ktor &amp; Kotlin
+# Payment REST Microservice
+
+Example implementation of REST payment service using SparkJava & Kotlin
