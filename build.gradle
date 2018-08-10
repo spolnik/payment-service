@@ -1,35 +1,52 @@
+plugins {
+    id "java"
+    id "application"
+    id 'com.github.johnrengelman.shadow' version '2.0.1'
+    id "io.franzbecker.gradle-lombok" version "1.14"
+}
+
 group = "io.payments"
 version = "1.0.0"
 
-apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'idea'
 apply plugin: 'jacoco'
 
+repositories {
+    mavenCentral()
+    jcenter()
+    maven { url "https://plugins.gradle.org/m2/" }
+}
+
+sourceCompatibility = '1.8'
+
 jar {
     manifest {
         attributes 'Implementation-Title': 'Payments Service',
-                   'Implementation-Version': version
+                'Implementation-Version': version
     }
 }
 
 mainClassName = "io.payments.PaymentsServiceApp"
 
-repositories {
-    jcenter()
-}
-
 dependencies {
     ext {
-        logbackVersion = '1.1.6'
-        slf4jApiVersion = '1.7.21'
-        sparkJavaVersion = '2.7.2'
+        logbackVersion      = '1.1.6'
+        slf4jApiVersion     = '1.7.21'
+        sparkJavaVersion    = '2.7.2'
+        guiceVersion        = '4.2.0'
     }
 
     compile "org.slf4j:slf4j-api:$slf4jApiVersion",
             "com.sparkjava:spark-core:$sparkJavaVersion",
             "ch.qos.logback:logback-classic:$logbackVersion",
             "ch.qos.logback:logback-core:$logbackVersion",
-            "ch.qos.logback:logback-access:$logbackVersion"
+            "ch.qos.logback:logback-access:$logbackVersion",
+            "com.google.inject:guice:$guiceVersion"
+
     testCompile 'junit:junit:4.12'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.0'
 }
