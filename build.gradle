@@ -1,0 +1,35 @@
+group = "io.payments"
+version = "1.0.0"
+
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'idea'
+apply plugin: 'jacoco'
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Payments Service',
+                   'Implementation-Version': version
+    }
+}
+
+mainClassName = "io.payments.PaymentsServiceApp"
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    ext {
+        logbackVersion = '1.1.6'
+        slf4jApiVersion = '1.7.21'
+        sparkJavaVersion = '2.7.2'
+    }
+
+    compile "org.slf4j:slf4j-api:$slf4jApiVersion",
+            "com.sparkjava:spark-core:$sparkJavaVersion",
+            "ch.qos.logback:logback-classic:$logbackVersion",
+            "ch.qos.logback:logback-core:$logbackVersion",
+            "ch.qos.logback:logback-access:$logbackVersion"
+    testCompile 'junit:junit:4.12'
+}
