@@ -39,6 +39,7 @@ public class PaymentsServiceIntegrationTest {
 
     @Test
     public void accepts_home_request() {
+        // @formatter:off
         given().
             accept(ContentType.JSON).
         when().
@@ -49,5 +50,6 @@ public class PaymentsServiceIntegrationTest {
                 "name", is("Payments Service"),
                     "version", is("1.0.0")
             );
+        // @formatter:on
     }
 }

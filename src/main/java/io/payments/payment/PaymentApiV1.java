@@ -34,7 +34,6 @@ public class PaymentApiV1 implements VersionedApi {
     @Override
     public RouteGroup routes() {
         return () -> {
-            get("info", info());
             post("", json(), executePayment());
             get("", findAllPayments());
         };

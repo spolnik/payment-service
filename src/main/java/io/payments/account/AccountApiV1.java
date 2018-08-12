@@ -34,7 +34,6 @@ public class AccountApiV1 implements VersionedApi {
     @Override
     public RouteGroup routes() {
         return () -> {
-            get("/info", info());
             get("/:accountId", findAccount());
             post("", json(), createAccount());
         };
