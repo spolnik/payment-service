@@ -39,7 +39,7 @@ public class PaymentsServiceApp {
                 (req, res) -> LOG.info("{} {}", req.requestMethod(), req.pathInfo())
         );
 
-        get("/", json(), home());
+        get("/version", json(), version());
         path(router.path(), router.routes());
 
         after("/*", (req, res) -> LOG.info(res.body()));
@@ -48,10 +48,10 @@ public class PaymentsServiceApp {
         LOG.info("Running at: http://localhost:{}", port);
     }
 
-    private Route home() {
+    private Route version() {
         return (req, res) -> {
             res.type(json());
-            return String.format("{\"info\": \"Payments Service %s\"}", version);
+            return String.format("{\"name\": \"Payments Service\", \"version\": \"%s\"}", version);
         };
     }
 

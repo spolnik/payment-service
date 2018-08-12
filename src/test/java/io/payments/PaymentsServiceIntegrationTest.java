@@ -41,11 +41,12 @@ public class PaymentsServiceIntegrationTest {
         given().
             accept(ContentType.JSON).
         when().
-            get("/").
+            get("/version").
         then().
             statusCode(200).
             body(
-                "info", is("Payments Service 1.0.0")
+                "name", is("Payments Service"),
+                    "version", is("1.0.0")
             );
     }
 }
