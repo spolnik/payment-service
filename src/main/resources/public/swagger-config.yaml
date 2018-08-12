@@ -154,21 +154,10 @@ definitions:
     type: "object"
     properties:
       currency:
-        $ref: "#/definitions/Currency"
+        type: "string"
       amount:
         type: "number"
         format: "double"
-  Currency:
-    type: "object"
-    properties:
-      code:
-        type: "string"
-      numericCode:
-        type: "integer"
-        format: "int64"
-      decimalPlaces:
-        type: "integer"
-        format: "int64"
   Payment:
     type: "object"
     properties:
