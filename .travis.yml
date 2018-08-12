@@ -10,5 +10,9 @@ before_cache:
 - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-  - $HOME/.gradle/caches/
-  - $HOME/.gradle/wrapper/
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+deploy:
+  provider: heroku
+  api_key:
+    secure: W2jhpjGk65hcNtEj01d5g5kmA5NuU/Ee5VeiTHgk6wiflF+U5M05wsySt+dlw0Ic/vn4fA2zqQVLIzBoE1S6Zcs0513mFw42zt9lOfRbgvJJo/LCOfj43WL1kj7xnDJPysNFcK5LKyuQJbGUyDPEcR+0YmBcbQmoFX2adTmMKkwYCRdlfGe1hCxDuHgAHCGqD3CA3/X0Jd9yoW1GvyGOAY1xO+yUiC6/vVOKLuGEfldj/TMiqxwIJD+zPxJXSU+pyjmNO3+qJ0kBryAfTbB8ZCOoj+7N+PsRtY/4RPW4fV2q6Z3WyxaLJDm/S3Qjag44Lz/v4qDMHjXinrcOO5UmSR2O5gyoQNkNb1rXZR6Hy5x83tYLmKKcAAZ1nhw2HRqlFhkvXXMgfJpBG7ptx8PjS5SE6vbbsVNz1nk+UI9GWIr5I8GHHLOEpaEX9oGukoW78YwI7t7jKt7C0/qJKdGPaBqoBqjjOYd9ECfe78VXJuFz90AVzizlFn/c2IhZZLVjmF2ls9NcFdMy1eOEvPn63OSyk3cP0vGoPJpwfy99EBOlwWiD26HczmqDguCL6Wfmo9/5sCidi54dSfYjGg95O/lWr76VjA7mI3n+EFXQqJ4Ew/FUMvBsW2Ls0PtEU0K0mfvgpeeXuiYGaCElbPA8YmhOVc9xIoiZNUcm+aUAGik=
