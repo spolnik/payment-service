@@ -57,7 +57,8 @@ public class PaymentApiV1 implements VersionedApi {
     private Route executePayment() {
         return (req, res) -> {
             res.type(json());
-            ExecutePaymentApiRequestV1 paymentsRequest = gson().fromJson(req.body(), ExecutePaymentApiRequestV1.class);
+            ExecutePaymentApiRequestV1 paymentsRequest =
+                    gson().fromJson(req.body(), ExecutePaymentApiRequestV1.class);
 
             PaymentStatus status = executePayment.run(paymentsRequest);
 

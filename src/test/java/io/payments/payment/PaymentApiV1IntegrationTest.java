@@ -9,7 +9,6 @@ import io.payments.account.XodusAccountsRepository;
 import io.payments.api.ApiRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -22,6 +21,8 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
+import static io.payments.TestUtils.PLN;
+import static io.payments.TestUtils.createAccount;
 import static io.payments.api.Common.gson;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,23 +33,12 @@ public class PaymentApiV1IntegrationTest {
             TestUtils.findRandomOpenPortOnAllLocalInterfaces();
     private static final String BASE_HOST = "http://localhost";
 
-    private static final CurrencyUnit PLN = CurrencyUnit.getInstance("PLN");
-
-    private static final Account ACCOUNT_A = createUser("A", 10000);
-    private static final Account ACCOUNT_B = createUser("B", 0);
-    private static final Account ACCOUNT_C = createUser("C", 10000);
-    private static final Account ACCOUNT_D = createUser("D", 0);
+    private static final Account ACCOUNT_A = createAccount("A", 10000);
+    private static final Account ACCOUNT_B = createAccount("B", 0);
+    private static final Account ACCOUNT_C = createAccount("C", 10000);
+    private static final Account ACCOUNT_D = createAccount("D", 0);
 
     private static final String TEST_DB_NAME = "PaymentApiV1IntegrationTest";
-
-    private static Account createUser(String name, int initialBalance) {
-        String userId = String.format("user%s@mail.com", name);
-        String accountId = String.format("ACCOUNT_%s", name);
-
-        return new Account(
-                null, userId, accountId, Money.of(PLN, initialBalance)
-        );
-    }
 
     @BeforeClass
     public static void setUpTest() throws IOException {

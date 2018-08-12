@@ -130,8 +130,12 @@ definitions:
   CreateAccountApiRequestV1:
     type: "object"
     properties:
-      account:
-        $ref: "#/definitions/Account"
+      userId:
+        type: "string"
+      accountId:
+        type: "string"
+      initialBalance:
+        $ref: "#/definitions/Money"
       trackId:
         type: "string"
   CreateAccountApiResponseV1:

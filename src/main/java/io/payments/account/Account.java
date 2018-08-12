@@ -13,7 +13,7 @@ import static io.payments.api.Common.gson;
 @NoArgsConstructor
 public class Account {
 
-    public static String NOT_SAVED = null;
+    static String NOT_SAVED = null;
 
     private String id;
     private String userId;

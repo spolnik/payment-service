@@ -27,6 +27,7 @@ public class PaymentsModule extends AbstractModule {
         bind(FindAllPayments.class).to(FindAllPaymentsInternally.class).asEagerSingleton();
 
         bind(FindAccount.class).to(FindAccountInternally.class).asEagerSingleton();
+        bind(CreateAccount.class).to(CreateAccountInternally.class).asEagerSingleton();
 
         bind(Router.class).to(PaymentsRouter.class).asEagerSingleton();
 
