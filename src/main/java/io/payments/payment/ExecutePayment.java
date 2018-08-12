@@ -1,5 +1,5 @@
 package io.payments.payment;
 
 public interface ExecutePayment {
-    PaymentStatus run(ExecutePaymentApiRequestV1 paymentsRequest);
+    PaymentStatus run(PaymentApiRequestV1 paymentsRequest);
 }

@@ -41,6 +41,7 @@ dependencies {
         assertjVersion      = '3.10.0'
         jodaMoneyVersion    = "0.12"
         xodusVersion        = "1.2.3"
+        junitParamsVersion  = "1.1.1"
     }
 
     compile "org.slf4j:slf4j-api:$slf4jApiVersion",
@@ -57,7 +58,8 @@ dependencies {
     testCompile "junit:junit:$junitVersion",
                 "io.rest-assured:rest-assured:$restAssuredVersion",
                 "io.rest-assured:json-path:$restAssuredVersion",
-                "org.assertj:assertj-core:$assertjVersion"
+                "org.assertj:assertj-core:$assertjVersion",
+                "pl.pragmatists:JUnitParams:$junitParamsVersion"
 
 }
 

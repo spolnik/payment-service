@@ -9,10 +9,14 @@ import io.payments.account.XodusAccountsRepository;
 import io.payments.api.ApiRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
+import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import spark.Spark;
 
 import java.io.IOException;
@@ -27,6 +31,7 @@ import static io.payments.api.Common.gson;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@RunWith(JUnitParamsRunner.class)
 public class PaymentApiV1IntegrationTest {
 
     private static final int TEST_PORT =
@@ -44,7 +49,7 @@ public class PaymentApiV1IntegrationTest {
     public static void setUpTest() throws IOException {
         setUpAccounts();
 
-        PaymentsServiceApp.main(new String[] {"port=" + TEST_PORT, "dbName=" + TEST_DB_NAME});
+        PaymentsServiceApp.main(new String[]{"port=" + TEST_PORT, "dbName=" + TEST_DB_NAME});
         RestAssured.baseURI = BASE_HOST;
         RestAssured.port = TEST_PORT;
         Spark.awaitInitialization();
@@ -72,27 +77,13 @@ public class PaymentApiV1IntegrationTest {
         ApiRequest paymentRequest = paymentRequestOf1000PLN(trackId, ACCOUNT_A, ACCOUNT_B);
 
         // @formatter:off
-        ExecutePaymentApiResponseV1 paymentResponse =
-                given().
-                    accept(ContentType.JSON).
-                    contentType(ContentType.JSON).
-                    body(paymentRequest.toJson()).
-                when().
-                    post("/api/v1/payments").
-                then().
-                    statusCode(200).
-                extract().body().as(ExecutePaymentApiResponseV1.class);
-        // @formatter:on
-
-        assertThat(paymentResponse.getStatus()).isEqualTo(PaymentStatus.COMPLETED.toString());
-        assertThat(paymentResponse.getUserId()).isEqualTo(ACCOUNT_A.getUserId());
-        assertThat(paymentResponse.getTrackId()).isEqualTo(trackId);
+        executePayment(trackId, paymentRequest, PaymentStatus.COMPLETED, ACCOUNT_A);
     }
 
     @Test
     public void registers_all_received_payments() {
         String trackId = UUID.randomUUID().toString();
-        ExecutePaymentApiRequestV1 paymentRequest = paymentRequestOf1000PLN(trackId, ACCOUNT_A, ACCOUNT_B);
+        PaymentApiRequestV1 paymentRequest = paymentRequestOf1000PLN(trackId, ACCOUNT_A, ACCOUNT_B);
 
         // @formatter:off
         given().
@@ -112,22 +103,22 @@ public class PaymentApiV1IntegrationTest {
                 then().
                     statusCode(200).
                 extract().body().asString();
+
+        List<Payment> payments = gson().fromJson(
+                paymentsAsJson, new TypeToken<List<Payment>>() {}.getType()
+        );
         // @formatter:on
 
-        List<Payment> payments = gson().fromJson(paymentsAsJson, new TypeToken<List<Payment>>() {}.getType());
-
-        assertThat(payments).hasSize(1);
+        assertThat(payments.size()).isGreaterThanOrEqualTo(1);
 
         Payment payment = payments.get(0);
-        Payment expected = paymentRequest.toPayment();
-        expected.setId("0-0");
-        assertThat(payment).isEqualToIgnoringGivenFields(expected, "receivedAtUTC");
+        assertThat(payment.getId()).isEqualTo("0-0");
     }
 
     @Test
     public void makes_money_transfer_for_payment_of_1000_PLN_from_account_C_with_initial_balance_10000_to_account_D_with_initial_balance_0() {
         String trackId = UUID.randomUUID().toString();
-        ExecutePaymentApiRequestV1 paymentRequest = paymentRequestOf1000PLN(trackId, ACCOUNT_C, ACCOUNT_D);
+        PaymentApiRequestV1 paymentRequest = paymentRequestOf1000PLN(trackId, ACCOUNT_C, ACCOUNT_D);
 
         // @formatter:off
         given().
@@ -142,6 +133,84 @@ public class PaymentApiV1IntegrationTest {
 
         checkAccount(ACCOUNT_C.getAccountId(), ACCOUNT_C.getUserId(), Money.of(PLN, 9000));
         checkAccount(ACCOUNT_D.getAccountId(), ACCOUNT_D.getUserId(), Money.of(PLN, 1000));
+    }
+
+    @Test
+    public void rejects_money_transfer_when_not_enough_money_on_payer_account() {
+        String trackId = UUID.randomUUID().toString();
+        ApiRequest paymentRequest = paymentRequestPLN(trackId, ACCOUNT_A, ACCOUNT_B, 1000000);
+        executePayment(trackId, paymentRequest, PaymentStatus.REJECTED, ACCOUNT_A);
+    }
+
+    @Test
+    public void rejects_money_transfer_when_currency_not_aligned_with_account() {
+        String trackId = UUID.randomUUID().toString();
+        ApiRequest paymentRequest = paymentRequest(trackId, ACCOUNT_A, ACCOUNT_B, 100, CurrencyUnit.EUR);
+        executePayment(trackId, paymentRequest, PaymentStatus.REJECTED, ACCOUNT_A);
+    }
+
+    @Test
+    public void rejects_money_transfer_when_account_to_is_empty() {
+        String trackId = UUID.randomUUID().toString();
+        ApiRequest paymentRequest = paymentRequestOf1000PLN(trackId, ACCOUNT_A, new Account());
+        executePayment(trackId, paymentRequest, PaymentStatus.REJECTED, ACCOUNT_A);
+    }
+
+    @Test
+    public void rejects_money_transfer_when_account_to_does_not_exist() {
+        String trackId = UUID.randomUUID().toString();
+        Account accountTo = new Account();
+        accountTo.setAccountId("does_not_exist");
+        ApiRequest paymentRequest = paymentRequestOf1000PLN(trackId, ACCOUNT_A, accountTo);
+        executePayment(trackId, paymentRequest, PaymentStatus.REJECTED, ACCOUNT_A);
+    }
+
+    @Test
+    @Parameters(method = "invalidPaymentRequests")
+    public void rejects_money_transfer_when_invalid_payment_request(
+            String userId, String accountFrom, Money balance, @SuppressWarnings("unused") String reason
+    ) {
+        String trackId = UUID.randomUUID().toString();
+        Account account = new Account(
+                null, userId, accountFrom, balance
+        );
+
+        ApiRequest paymentRequest = paymentRequestOf1000PLN(
+                trackId, account, ACCOUNT_B
+        );
+
+        executePayment(trackId, paymentRequest, PaymentStatus.REJECTED, account);
+    }
+
+    @SuppressWarnings("unused")
+    private Object[] invalidPaymentRequests() {
+        return new Object[] {
+                new Object[] {ACCOUNT_A.getUserId(), null, ACCOUNT_A.getBalance(), "empty account from"},
+                new Object[] {null, ACCOUNT_A.getAccountId(), ACCOUNT_A.getBalance(), "empty account user id"},
+                new Object[] {"CHANGED", ACCOUNT_A.getAccountId(), ACCOUNT_A.getBalance(), "user id not matching account"},
+                new Object[] {ACCOUNT_A.getUserId(), "do_not_exist", ACCOUNT_A.getBalance(), "account to does not exist"},
+        };
+    }
+
+    private void executePayment(
+            String trackId, ApiRequest paymentRequest, PaymentStatus status, Account payerAccount
+    ) {
+        // @formatter:off
+        PaymentApiResponseV1 paymentResponse =
+            given().
+                accept(ContentType.JSON).
+                contentType(ContentType.JSON).
+                body(paymentRequest.toJson()).
+            when().
+                post("/api/v1/payments").
+            then().
+                statusCode(200).
+            extract().body().as(PaymentApiResponseV1.class);
+        // @formatter:on
+
+        assertThat(paymentResponse.getStatus()).isEqualTo(status.toString());
+        assertThat(paymentResponse.getUserId()).isEqualTo(payerAccount.getUserId());
+        assertThat(paymentResponse.getTrackId()).isEqualTo(trackId);
     }
 
     private void checkAccount(String accountId, String userId, Money finalBalance) {
@@ -163,12 +232,26 @@ public class PaymentApiV1IntegrationTest {
         assertThat(account.getBalance()).isEqualTo(finalBalance);
     }
 
-    private ExecutePaymentApiRequestV1 paymentRequestOf1000PLN(String trackId, Account from, Account to) {
-        return new ExecutePaymentApiRequestV1(
+    private static PaymentApiRequestV1 paymentRequestOf1000PLN(
+            String trackId, Account from, Account to
+    ) {
+        return paymentRequestPLN(trackId, from, to, 1000.0);
+    }
+
+    private static PaymentApiRequestV1 paymentRequestPLN(
+            String trackId, Account from, Account to, double amount
+    ) {
+        return paymentRequest(trackId, from, to, amount, PLN);
+    }
+
+    private static PaymentApiRequestV1 paymentRequest(
+            String trackId, Account from, Account to, double amount, CurrencyUnit currency
+    ) {
+        return new PaymentApiRequestV1(
                 from.getUserId(),
                 from.getAccountId(),
                 to.getAccountId(),
-                Money.of(PLN, BigDecimal.valueOf(1000.0)),
+                Money.of(currency, BigDecimal.valueOf(amount)),
                 trackId
         );
     }

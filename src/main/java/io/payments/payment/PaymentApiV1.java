@@ -1,5 +1,6 @@
 package io.payments.payment;
 
+import com.google.common.base.Strings;
 import io.payments.api.VersionedApi;
 import spark.Route;
 import spark.RouteGroup;
@@ -7,6 +8,7 @@ import spark.RouteGroup;
 import javax.inject.Inject;
 import java.util.List;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static io.payments.api.Common.gson;
 import static io.payments.api.Common.json;
 import static spark.Spark.get;
@@ -56,16 +58,25 @@ public class PaymentApiV1 implements VersionedApi {
     private Route executePayment() {
         return (req, res) -> {
             res.type(json());
-            ExecutePaymentApiRequestV1 paymentsRequest =
-                    gson().fromJson(req.body(), ExecutePaymentApiRequestV1.class);
+            PaymentApiRequestV1 paymentsRequest =
+                    gson().fromJson(req.body(), PaymentApiRequestV1.class);
 
-            PaymentStatus status = executePayment.run(paymentsRequest);
+            PaymentStatus status = isInvalid(paymentsRequest)
+                    ? PaymentStatus.REJECTED
+                    : executePayment.run(paymentsRequest);
 
-            return new ExecutePaymentApiResponseV1(
+            return new PaymentApiResponseV1(
                     paymentsRequest.getUserId(),
                     status.toString(),
                     paymentsRequest.getTrackId()
             ).toJson();
         };
+    }
+
+    private boolean isInvalid(PaymentApiRequestV1 paymentsRequest) {
+        return isNullOrEmpty(paymentsRequest.getUserId()) ||
+                isNullOrEmpty(paymentsRequest.getAccountFrom()) ||
+                isNullOrEmpty(paymentsRequest.getAccountTo()) ||
+                paymentsRequest.getAmount() == null;
     }
 }

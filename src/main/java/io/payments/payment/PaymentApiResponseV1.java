@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-class ExecutePaymentApiResponseV1 implements ApiResponse {
+class PaymentApiResponseV1 implements ApiResponse {
     private String userId;
     private String status;
     private String trackId;

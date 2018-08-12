@@ -23,7 +23,7 @@ public class ExecutePaymentInternally implements ExecutePayment {
     }
 
     @Override
-    public PaymentStatus run(ExecutePaymentApiRequestV1 paymentsRequest) {
+    public PaymentStatus run(PaymentApiRequestV1 paymentsRequest) {
         Payment payment = store(paymentsRequest.toPayment());
 
         return accountsRepository.executePayment(

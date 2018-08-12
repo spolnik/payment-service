@@ -14,7 +14,7 @@ import static io.payments.payment.Payment.NOT_SAVED;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-class ExecutePaymentApiRequestV1 implements ApiRequest {
+class PaymentApiRequestV1 implements ApiRequest {
 
     private String userId;
     private String accountFrom;
