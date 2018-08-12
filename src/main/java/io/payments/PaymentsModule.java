@@ -3,7 +3,7 @@ package io.payments;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
-import io.payments.account.AccountApiV1;
+import io.payments.account.*;
 import io.payments.api.PaymentsRouter;
 import io.payments.api.Router;
 import io.payments.api.VersionedApi;
@@ -21,10 +21,14 @@ public class PaymentsModule extends AbstractModule {
         bindConstant().annotatedWith(Names.named("dbName")).to(dbName);
 
         bind(PaymentsRepository.class).to(XodusPaymentsRepository.class).asEagerSingleton();
+        bind(AccountsRepository.class).to(XodusAccountsRepository.class).asEagerSingleton();
 
-        bind(Router.class).to(PaymentsRouter.class).asEagerSingleton();
         bind(ExecutePayment.class).to(ExecutePaymentInternally.class).asEagerSingleton();
         bind(FindAllPayments.class).to(FindAllPaymentsInternally.class).asEagerSingleton();
+
+        bind(FindAccount.class).to(FindAccountInternally.class).asEagerSingleton();
+
+        bind(Router.class).to(PaymentsRouter.class).asEagerSingleton();
 
         Multibinder<VersionedApi> mb = Multibinder.newSetBinder(binder(), VersionedApi.class);
         mb.addBinding().to(PaymentApiV1.class);

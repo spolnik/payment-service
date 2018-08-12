@@ -35,10 +35,12 @@ paths:
         description: "PaymentRequest representing all necessery details to execute payment"
         required: true
         schema:
-          $ref: "#/definitions/PaymentRequestV1"
+          $ref: "#/definitions/ExecutePaymentApiRequestV1"
       responses:
         200:
           description: "Payment completed successfully"
+          schema:
+            ref: "#/definitions/ExecutePaymentApiResponseV1"
         405:
           description: "Invalid input"
     get:
@@ -98,7 +100,7 @@ paths:
         default:
           description: "successful operation"
 definitions:
-  PaymentRequestV1:
+  ExecutePaymentApiRequestV1:
     type: "object"
     properties:
       userId:
@@ -130,7 +132,7 @@ definitions:
       decimalPlaces:
         type: "integer"
         format: "int64"
-  PaymentResponseV1:
+  ExecutePaymentApiResponseV1:
     type: "object"
     properties:
       userId:

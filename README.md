@@ -10,6 +10,7 @@ Money transfer microservice example implementation
 
 ## Infrastructure
 
+- Gradle
 - Travis CI
 - Codecov
 - Heroku

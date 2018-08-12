@@ -33,7 +33,8 @@ public class PaymentsServiceIntegrationTest {
     @AfterClass
     public static void tearDown() throws IOException {
         Spark.stop();
-        TestUtils.deleteDirectoryStream(Paths.get("./" + TEST_DB_NAME));
+        TestUtils.deleteDirectoryStream(Paths.get("./" + TEST_DB_NAME + "_Payments"));
+        TestUtils.deleteDirectoryStream(Paths.get("./" + TEST_DB_NAME + "_Accounts"));
     }
 
     @Test

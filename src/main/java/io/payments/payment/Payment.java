@@ -45,7 +45,6 @@ public class Payment {
 
     static class Constants {
         static final String ENTITY_TYPE = "Payments";
-        static final String id = "id";
         static final String userId = "userId";
         static final String accountFrom = "accountFrom";
         static final String accountTo = "accountTo";
