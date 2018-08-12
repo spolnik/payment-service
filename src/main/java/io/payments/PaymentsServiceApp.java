@@ -33,6 +33,7 @@ public class PaymentsServiceApp {
 
     private void run(int port) {
         port(port);
+        staticFiles.location("/public");
 
         before("/*",
                 (req, res) -> LOG.info("{} {}", req.requestMethod(), req.pathInfo())
