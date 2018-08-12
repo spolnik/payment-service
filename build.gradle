@@ -90,3 +90,6 @@ processResources.dependsOn(createProperties)
 classes {
     dependsOn createProperties
 }
+
+task stage(dependsOn: ['build', 'clean'])
+build.mustRunAfter clean
