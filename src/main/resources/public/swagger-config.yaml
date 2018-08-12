@@ -156,7 +156,7 @@ definitions:
         type: "string"
         enum:
         - "CREATED"
-        - "REJECTED"
+        - "ALREADY_EXIST"
       trackId:
         type: "string"
   Money:
