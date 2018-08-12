@@ -37,7 +37,7 @@ public class XodusPaymentsRepository implements PaymentsRepository {
 
     @Override
     public Payment save(Payment payment) {
-        return store.computeInExclusiveTransaction(txn -> {
+        return store.computeInTransaction(txn -> {
             Entity entity = txn.newEntity(Payment.Constants.ENTITY_TYPE);
             entity.setProperty(Payment.Constants.userId, payment.getUserId());
             entity.setProperty(Payment.Constants.accountFrom, payment.getAccountFrom());

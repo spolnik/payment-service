@@ -31,7 +31,7 @@ public class XodusAccountsRepository implements AccountsRepository {
 
     @Override
     public Account save(Account account) {
-        return store.computeInExclusiveTransaction(txn -> {
+        return store.computeInTransaction(txn -> {
             Entity entity = txn.newEntity(Account.Constants.ENTITY_TYPE);
             entity.setProperty(Account.Constants.userId, account.getUserId());
             entity.setProperty(Account.Constants.accountId, account.getAccountId());
@@ -59,7 +59,7 @@ public class XodusAccountsRepository implements AccountsRepository {
             Payment payment,
             Function<Entity, Entity, Boolean> isValid
     ) {
-        return store.computeInExclusiveTransaction(txn -> {
+        return store.computeInTransaction(txn -> {
             Entity accountFromEntity = txn.find(
                     Account.Constants.ENTITY_TYPE,
                     Account.Constants.accountId,
