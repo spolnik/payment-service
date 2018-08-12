@@ -67,9 +67,44 @@ public class AccountApiV1IntegrationTest {
     }
 
     @Test
+    public void rejects_account_creation_when_account_id_is_already_used() {
+        String trackId = UUID.randomUUID().toString();
+        Account newAccount = createAccount("TestAccount2", 3333);
+
+        CreateAccountApiRequestV1 createAccountRequest =
+                createNewAccountRequest(trackId, newAccount);
+
+        // @formatter:off
+        given().
+            accept(ContentType.JSON).
+            contentType(ContentType.JSON).
+            body(createAccountRequest.toJson()).
+        when().
+            post("/api/v1/accounts").
+        then().
+            statusCode(200);
+
+        CreateAccountApiResponseV1 response =
+                given().
+                    accept(ContentType.JSON).
+                    contentType(ContentType.JSON).
+                    body(createAccountRequest.toJson()).
+                when().
+                    post("/api/v1/accounts").
+                then().
+                    statusCode(409).
+                extract().body().as(CreateAccountApiResponseV1.class);
+        // @formatter:on
+
+        assertThat(response.getAccountId()).isEqualTo(createAccountRequest.getAccountId());
+        assertThat(response.getStatus()).isEqualTo(AccountStatus.ALREADY_EXIST.toString());
+        assertThat(response.getTrackId()).isEqualTo(trackId);
+    }
+
+    @Test
     public void returns_created_account_when_queried() {
         String trackId = UUID.randomUUID().toString();
-        Account newAccount = createAccount("TestAccount2", 4444);
+        Account newAccount = createAccount("TestAccount3", 5555);
 
         CreateAccountApiRequestV1 createAccountRequest =
                 createNewAccountRequest(trackId, newAccount);

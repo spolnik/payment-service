@@ -30,14 +30,24 @@ public class XodusAccountsRepository implements AccountsRepository {
     }
 
     @Override
-    public Account save(Account account) {
+    public AccountStatus save(Account account) {
         return store.computeInTransaction(txn -> {
+            Entity alreadyExist = txn.find(
+                    Account.Constants.ENTITY_TYPE,
+                    Account.Constants.accountId,
+                    account.getAccountId()
+            ).getFirst();
+
+            if (alreadyExist != null) {
+                return AccountStatus.ALREADY_EXIST;
+            }
+
             Entity entity = txn.newEntity(Account.Constants.ENTITY_TYPE);
             entity.setProperty(Account.Constants.userId, account.getUserId());
             entity.setProperty(Account.Constants.accountId, account.getAccountId());
             setNewBalance(entity, account.getBalance());
 
-            return Account.from(entity);
+            return AccountStatus.CREATED;
         });
     }
 
@@ -57,7 +67,7 @@ public class XodusAccountsRepository implements AccountsRepository {
     @Override
     public PaymentStatus executePayment(
             Payment payment,
-            Function<Entity, Entity, Boolean> isValid
+            Function<Entity, Entity, PaymentStatus> isValid
     ) {
         return store.computeInTransaction(txn -> {
             Entity accountFromEntity = txn.find(
@@ -72,8 +82,10 @@ public class XodusAccountsRepository implements AccountsRepository {
                     payment.getAccountTo()
             ).getFirst();
 
-            if (!isValid.apply(accountFromEntity, accountToEntity)) {
-                return PaymentStatus.REJECTED;
+            PaymentStatus validationStatus = isValid.apply(accountFromEntity, accountToEntity);
+
+            if (validationStatus != PaymentStatus.VALID) {
+                return validationStatus;
             }
 
             return transferMoney(accountFromEntity, accountToEntity, payment.getAmount());

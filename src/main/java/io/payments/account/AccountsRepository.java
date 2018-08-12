@@ -9,10 +9,10 @@ import java.io.Closeable;
 import java.util.Optional;
 
 public interface AccountsRepository extends Closeable {
-    Account save(Account account);
+    AccountStatus save(Account account);
     Optional<Account> findById(String accountId);
     PaymentStatus executePayment(
             Payment payment,
-            Function<Entity, Entity, Boolean> isValid
+            Function<Entity, Entity, PaymentStatus> isValid
     );
 }

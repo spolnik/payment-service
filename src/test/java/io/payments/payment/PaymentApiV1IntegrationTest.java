@@ -139,21 +139,36 @@ public class PaymentApiV1IntegrationTest {
     public void rejects_money_transfer_when_not_enough_money_on_payer_account() {
         String trackId = UUID.randomUUID().toString();
         ApiRequest paymentRequest = paymentRequestPLN(trackId, ACCOUNT_A, ACCOUNT_B, 1000000);
-        executePayment(trackId, paymentRequest, PaymentStatus.REJECTED, ACCOUNT_A);
+        executePayment(trackId, paymentRequest, PaymentStatus.NOT_ENOUGH_MONEY, ACCOUNT_A);
     }
 
     @Test
     public void rejects_money_transfer_when_currency_not_aligned_with_account() {
         String trackId = UUID.randomUUID().toString();
         ApiRequest paymentRequest = paymentRequest(trackId, ACCOUNT_A, ACCOUNT_B, 100, CurrencyUnit.EUR);
-        executePayment(trackId, paymentRequest, PaymentStatus.REJECTED, ACCOUNT_A);
+        executePayment(trackId, paymentRequest, PaymentStatus.INVALID_CURRENCY, ACCOUNT_A);
+    }
+
+    @Test
+    public void rejects_money_transfer_when_amount_is_missing() {
+        String trackId = UUID.randomUUID().toString();
+
+        ApiRequest paymentRequestWithMissingAmount = new PaymentApiRequestV1(
+                ACCOUNT_A.getUserId(),
+                ACCOUNT_A.getAccountId(),
+                ACCOUNT_B.getAccountId(),
+                null,
+                trackId
+        );
+
+        executePayment(trackId, paymentRequestWithMissingAmount, PaymentStatus.AMOUNT_MISSING, ACCOUNT_A);
     }
 
     @Test
     public void rejects_money_transfer_when_account_to_is_empty() {
         String trackId = UUID.randomUUID().toString();
         ApiRequest paymentRequest = paymentRequestOf1000PLN(trackId, ACCOUNT_A, new Account());
-        executePayment(trackId, paymentRequest, PaymentStatus.REJECTED, ACCOUNT_A);
+        executePayment(trackId, paymentRequest, PaymentStatus.ACCOUNT_TO_MISSING, ACCOUNT_A);
     }
 
     @Test
@@ -162,13 +177,13 @@ public class PaymentApiV1IntegrationTest {
         Account accountTo = new Account();
         accountTo.setAccountId("does_not_exist");
         ApiRequest paymentRequest = paymentRequestOf1000PLN(trackId, ACCOUNT_A, accountTo);
-        executePayment(trackId, paymentRequest, PaymentStatus.REJECTED, ACCOUNT_A);
+        executePayment(trackId, paymentRequest, PaymentStatus.ACCOUNT_TO_NOT_FOUND, ACCOUNT_A);
     }
 
     @Test
     @Parameters(method = "invalidPaymentRequests")
     public void rejects_money_transfer_when_invalid_payment_request(
-            String userId, String accountFrom, Money balance, @SuppressWarnings("unused") String reason
+            String userId, String accountFrom, Money balance, PaymentStatus expectedStatus
     ) {
         String trackId = UUID.randomUUID().toString();
         Account account = new Account(
@@ -179,16 +194,16 @@ public class PaymentApiV1IntegrationTest {
                 trackId, account, ACCOUNT_B
         );
 
-        executePayment(trackId, paymentRequest, PaymentStatus.REJECTED, account);
+        executePayment(trackId, paymentRequest, expectedStatus, account);
     }
 
     @SuppressWarnings("unused")
     private Object[] invalidPaymentRequests() {
         return new Object[] {
-                new Object[] {ACCOUNT_A.getUserId(), null, ACCOUNT_A.getBalance(), "empty account from"},
-                new Object[] {null, ACCOUNT_A.getAccountId(), ACCOUNT_A.getBalance(), "empty account user id"},
-                new Object[] {"CHANGED", ACCOUNT_A.getAccountId(), ACCOUNT_A.getBalance(), "user id not matching account"},
-                new Object[] {ACCOUNT_A.getUserId(), "do_not_exist", ACCOUNT_A.getBalance(), "account to does not exist"},
+                new Object[] {ACCOUNT_A.getUserId(), null, ACCOUNT_A.getBalance(), PaymentStatus.ACCOUNT_FROM_MISSING},
+                new Object[] {null, ACCOUNT_A.getAccountId(), ACCOUNT_A.getBalance(), PaymentStatus.USER_ID_MISSING},
+                new Object[] {"CHANGED", ACCOUNT_A.getAccountId(), ACCOUNT_A.getBalance(), PaymentStatus.USER_ID_AND_ACCOUNT_TO_DO_NOT_MATCH},
+                new Object[] {ACCOUNT_A.getUserId(), "do_not_exist", ACCOUNT_A.getBalance(), PaymentStatus.ACCOUNT_FROM_NOT_FOUND},
         };
     }
 

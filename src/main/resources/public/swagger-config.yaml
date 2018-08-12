@@ -124,7 +124,16 @@ definitions:
         type: "string"
         enum:
         - "COMPLETED"
-        - "REJECTED"
+        - "NOT_ENOUGH_MONEY"
+        - "INVALID_CURRENCY"
+        - "ACCOUNT_TO_MISSING"
+        - "ACCOUNT_TO_NOT_FOUND"
+        - "ACCOUNT_FROM_MISSING"
+        - "USER_ID_MISSING"
+        - "USER_ID_AND_ACCOUNT_TO_DO_NOT_MATCH"
+        - "ACCOUNT_FROM_NOT_FOUND"
+        - "VALID"
+        - "AMOUNT_MISSING"
       trackId:
         type: "string"
   CreateAccountApiRequestV1:

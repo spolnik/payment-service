@@ -32,30 +32,34 @@ public class ExecutePaymentInternally implements ExecutePayment {
         );
     }
 
-    private Function<Entity, Entity, Boolean> isValid(Payment payment) {
+    private Function<Entity, Entity, PaymentStatus> isValid(Payment payment) {
         return (Entity accountFromEntity, Entity accountToEntity) -> {
-            if (accountFromEntity == null || accountToEntity == null) {
-                return false;
+            if (accountFromEntity == null) {
+                return PaymentStatus.ACCOUNT_FROM_NOT_FOUND;
+            }
+
+            if (accountToEntity == null) {
+                return PaymentStatus.ACCOUNT_TO_NOT_FOUND;
             }
 
             Account accountFrom = Account.from(accountFromEntity);
 
             if (invalidUser(accountFrom.getUserId(), payment.getUserId())) {
-                return false;
+                return PaymentStatus.USER_ID_AND_ACCOUNT_TO_DO_NOT_MATCH;
             }
 
             if (!hasMoneyInRequiredCurrency(payment, accountFrom)) {
-                return false;
+                return PaymentStatus.INVALID_CURRENCY;
             }
 
             return hasEnoughMoney(payment, accountFrom);
         };
     }
 
-    private boolean hasEnoughMoney(Payment payment, Account accountFrom) {
+    private PaymentStatus hasEnoughMoney(Payment payment, Account accountFrom) {
         return accountFrom.getBalance().getAmount().compareTo(
                 payment.getAmount().getAmount()
-        ) >= 0;
+        ) >= 0 ? PaymentStatus.VALID : PaymentStatus.NOT_ENOUGH_MONEY;
     }
 
     private boolean hasMoneyInRequiredCurrency(Payment payment, Account accountFrom) {

@@ -2,5 +2,5 @@ package io.payments.account;
 
 enum AccountStatus {
     CREATED,
-    REJECTED
+    ALREADY_EXIST
 }

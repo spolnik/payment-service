@@ -48,6 +48,10 @@ public class AccountApiV1 implements VersionedApi {
 
             AccountStatus status = createAccount.run(createAccountRequest);
 
+            if (AccountStatus.ALREADY_EXIST.equals(status)) {
+                res.status(409);
+            }
+
             return new CreateAccountApiResponseV1(
                     createAccountRequest.getAccountId(),
                     status.toString(),

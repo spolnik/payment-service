@@ -13,8 +13,6 @@ public class CreateAccountInternally implements CreateAccount {
 
     @Override
     public AccountStatus run(CreateAccountApiRequestV1 request) {
-
-        repository.save(request.toAccount());
-        return AccountStatus.CREATED;
+        return repository.save(request.toAccount());
     }
 }

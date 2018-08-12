@@ -1,6 +1,5 @@
 package io.payments.payment;
 
-import com.google.common.base.Strings;
 import io.payments.api.VersionedApi;
 import spark.Route;
 import spark.RouteGroup;
@@ -61,9 +60,10 @@ public class PaymentApiV1 implements VersionedApi {
             PaymentApiRequestV1 paymentsRequest =
                     gson().fromJson(req.body(), PaymentApiRequestV1.class);
 
-            PaymentStatus status = isInvalid(paymentsRequest)
-                    ? PaymentStatus.REJECTED
-                    : executePayment.run(paymentsRequest);
+            PaymentStatus validationStatus = validate(paymentsRequest);
+            PaymentStatus status = validationStatus == PaymentStatus.VALID
+                    ? executePayment.run(paymentsRequest)
+                    : validationStatus;
 
             return new PaymentApiResponseV1(
                     paymentsRequest.getUserId(),
@@ -73,10 +73,23 @@ public class PaymentApiV1 implements VersionedApi {
         };
     }
 
-    private boolean isInvalid(PaymentApiRequestV1 paymentsRequest) {
-        return isNullOrEmpty(paymentsRequest.getUserId()) ||
-                isNullOrEmpty(paymentsRequest.getAccountFrom()) ||
-                isNullOrEmpty(paymentsRequest.getAccountTo()) ||
-                paymentsRequest.getAmount() == null;
+    private PaymentStatus validate(PaymentApiRequestV1 paymentsRequest) {
+        if (isNullOrEmpty(paymentsRequest.getUserId())) {
+            return PaymentStatus.USER_ID_MISSING;
+        }
+
+        if (isNullOrEmpty(paymentsRequest.getAccountFrom())) {
+            return PaymentStatus.ACCOUNT_FROM_MISSING;
+        }
+
+        if (isNullOrEmpty(paymentsRequest.getAccountTo())) {
+            return PaymentStatus.ACCOUNT_TO_MISSING;
+        }
+
+        if (paymentsRequest.getAmount() == null) {
+            return PaymentStatus.AMOUNT_MISSING;
+        }
+
+        return PaymentStatus.VALID;
     }
 }
