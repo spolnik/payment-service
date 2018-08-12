@@ -20,8 +20,6 @@ import static spark.Spark.*;
 public class PaymentsServiceApp {
 
     private static final Logger LOG = LoggerFactory.getLogger(PaymentsServiceApp.class);
-
-
     private static final int DEFAULT_PORT = 4000;
 
     private final Router router;
@@ -45,6 +43,7 @@ public class PaymentsServiceApp {
 
         after("/*", (req, res) -> LOG.info(res.body()));
 
+        awaitInitialization();
         LOG.info("Running at: http://localhost:{}", port);
     }
 
@@ -58,10 +57,12 @@ public class PaymentsServiceApp {
     public static void main(String[] args) {
         int port = clarifyPort();
         if (args != null && args.length > 0) {
-            port = overwritePortWithCommandLine(args, port);
+            port = Integer.parseInt(overwriteWithCommandLine(args, Integer.toString(port), "port"));
         }
 
-        Guice.createInjector(new PaymentsModule())
+        String dbName = overwriteWithCommandLine(args, "PaymentStore", "dbName");
+
+        Guice.createInjector(new PaymentsModule(dbName))
                 .getInstance(PaymentsServiceApp.class)
                 .run(port);
     }
@@ -79,11 +80,11 @@ public class PaymentsServiceApp {
         }
     }
 
-    private static int overwritePortWithCommandLine(String[] args, int port) {
-        Optional<String> portArg = Arrays.stream(args)
-                .filter(it -> it.startsWith("port=")).findFirst();
+    private static String overwriteWithCommandLine(String[] args, String defaultValue, String argName) {
+        Optional<String> arg = Arrays.stream(args)
+                .filter(it -> it.startsWith(argName + "=")).findFirst();
 
-        return portArg.map(s -> Integer.parseInt(s.split("=")[1])).orElse(port);
+        return arg.map(s -> s.split("=")[1]).orElse(defaultValue);
     }
 
     private static int clarifyPort() {

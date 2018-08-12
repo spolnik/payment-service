@@ -40,6 +40,7 @@ dependencies {
         junitVersion        = '4.12'
         assertjVersion      = '3.10.0'
         jodaMoneyVersion    = "0.12"
+        xodusVersion        = "1.2.3"
     }
 
     compile "org.slf4j:slf4j-api:$slf4jApiVersion",
@@ -49,7 +50,9 @@ dependencies {
             "ch.qos.logback:logback-access:$logbackVersion",
             "com.google.inject:guice:$guiceVersion",
             "com.google.code.gson:gson:$gsonVersion",
-            "org.joda:joda-money:$jodaMoneyVersion"
+            "org.joda:joda-money:$jodaMoneyVersion",
+            "org.jetbrains.xodus:xodus-openAPI:$xodusVersion",
+            "org.jetbrains.xodus:xodus-entity-store:$xodusVersion"
 
     testCompile "junit:junit:$junitVersion",
                 "io.rest-assured:rest-assured:$restAssuredVersion",
@@ -62,6 +65,15 @@ task wrapper(type: Wrapper) {
     gradleVersion = '4.0'
 }
 
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
+
+check.dependsOn jacocoTestReport
 
 task createProperties() {
     doLast {
