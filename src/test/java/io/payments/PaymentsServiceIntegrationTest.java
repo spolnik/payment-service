@@ -12,7 +12,8 @@ import static org.hamcrest.core.Is.is;
 
 public class PaymentsServiceIntegrationTest {
 
-    private static final int TEST_PORT = 8080;
+    private static final int TEST_PORT =
+            TestUtils.findRandomOpenPortOnAllLocalInterfaces();
     private static final String BASE_HOST = "http://localhost";
 
     @BeforeClass

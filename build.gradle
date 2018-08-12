@@ -39,6 +39,7 @@ dependencies {
         restAssuredVersion  = '3.1.0'
         junitVersion        = '4.12'
         assertjVersion      = '3.10.0'
+        jodaMoneyVersion    = "0.12"
     }
 
     compile "org.slf4j:slf4j-api:$slf4jApiVersion",
@@ -47,7 +48,8 @@ dependencies {
             "ch.qos.logback:logback-core:$logbackVersion",
             "ch.qos.logback:logback-access:$logbackVersion",
             "com.google.inject:guice:$guiceVersion",
-            "com.google.code.gson:gson:$gsonVersion"
+            "com.google.code.gson:gson:$gsonVersion",
+            "org.joda:joda-money:$jodaMoneyVersion"
 
     testCompile "junit:junit:$junitVersion",
                 "io.rest-assured:rest-assured:$restAssuredVersion",

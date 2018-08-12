@@ -7,6 +7,7 @@ import spark.Spark;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -16,10 +17,10 @@ import static spark.Spark.get;
 public class PaymentsRouter implements Router {
 
     private static final String API_PREFIX = "/api";
-    private final List<VersionedApi> api;
+    private final Set<VersionedApi> api;
 
     @Inject
-    public PaymentsRouter(List<VersionedApi> api) {
+    public PaymentsRouter(Set<VersionedApi> api) {
         this.api = api;
     }
 
