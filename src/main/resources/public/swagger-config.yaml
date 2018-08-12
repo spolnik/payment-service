@@ -32,7 +32,7 @@ paths:
       parameters:
       - in: "body"
         name: "body"
-        description: "PaymentRequest representing all necessery details to execute payment"
+        description: "Execute payment request"
         required: true
         schema:
           $ref: "#/definitions/ExecutePaymentApiRequestV1"
@@ -40,9 +40,7 @@ paths:
         200:
           description: "Payment completed successfully"
           schema:
-            ref: "#/definitions/ExecutePaymentApiResponseV1"
-        405:
-          description: "Invalid input"
+            $ref: "#/definitions/ExecutePaymentApiResponseV1"
     get:
       tags:
       - "payment"
@@ -58,7 +56,30 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/Payment"
-  /accounts/{userId}:
+  /accounts:
+    post:
+      tags:
+      - "account"
+      summary: "Register new account"
+      description: ""
+      operationId: "createAccount"
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Create new account request"
+        required: true
+        schema:
+          $ref: "#/definitions/CreateAccountApiRequestV1"
+      responses:
+        200:
+          description: "Account created successfully"
+          schema:
+            $ref: "#/definitions/CreateAccountApiResponseV1"
+  /accounts/{accountId}:
     get:
       tags:
       - "account"
@@ -67,38 +88,19 @@ paths:
       operationId: "findUserAccounts"
       produces:
       - "application/json"
-      parameters: 
-      - name: "userId"
-        in: "path"
-        description: "User ID"
-        required: true
-        type: "string"
-      responses:
-        default:
-          description: "successful operation"
-  /accounts/{userId}/details/{accountId}:
-    get:
-      tags:
-      - "account"
-      summary: "Get details of user account"
-      description: ""
-      operationId: "findUserAccountDetails"
-      produces:
-      - "application/json"
-      parameters: 
-      - name: "userId"
-        in: "path"
-        description: "User ID"
-        required: true
-        type: "string"
+      parameters:
       - name: "accountId"
         in: "path"
-        description: "User Account ID"
+        description: "Account ID"
         required: true
         type: "string"
       responses:
-        default:
+        200:
           description: "successful operation"
+          schema:
+            $ref: "#/definitions/Account"
+        404:
+          description: "Not found"
 definitions:
   ExecutePaymentApiRequestV1:
     type: "object"
@@ -111,6 +113,37 @@ definitions:
         type: "string"
       amount:
         $ref: "#/definitions/Money"
+      trackId:
+        type: "string"
+  ExecutePaymentApiResponseV1:
+    type: "object"
+    properties:
+      userId:
+        type: "string"
+      status:
+        type: "string"
+        enum:
+        - "COMPLETED"
+        - "REJECTED"
+      trackId:
+        type: "string"
+  CreateAccountApiRequestV1:
+    type: "object"
+    properties:
+      account:
+        $ref: "#/definitions/Account"
+      trackId:
+        type: "string"
+  CreateAccountApiResponseV1:
+    type: "object"
+    properties:
+      accountId:
+        type: "string"
+      status:
+        type: "string"
+        enum:
+        - "CREATED"
+        - "REJECTED"
       trackId:
         type: "string"
   Money:
@@ -132,18 +165,6 @@ definitions:
       decimalPlaces:
         type: "integer"
         format: "int64"
-  ExecutePaymentApiResponseV1:
-    type: "object"
-    properties:
-      userId:
-        type: "string"
-      status:
-        type: "string"
-        enum:
-          - "COMPLETED"
-          - "REJECTED"
-      trackId:
-        type: "string"
   Payment:
     type: "object"
     properties:
@@ -165,6 +186,15 @@ definitions:
         format: "date-time"
   Account:
     type: "object"
+    properties:
+      id:
+        type: "string"
+      userId:
+        type: "string"
+      accountId:
+        type: "string"
+      balance:
+        $ref: "#/definitions/Money"
 externalDocs:
   description: "Find out more about MoneyPal"
   url: "https://github.com/spolnik/payment-service"

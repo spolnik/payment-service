@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.joda.money.Money;
 
-import java.time.LocalDateTime;
-
 import static io.payments.api.Common.gson;
 
 @Data
