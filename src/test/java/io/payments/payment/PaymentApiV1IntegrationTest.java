@@ -1,6 +1,5 @@
 package io.payments.payment;
 
-import com.google.gson.reflect.TypeToken;
 import io.payments.PaymentsServiceApp;
 import io.payments.TestUtils;
 import io.payments.account.Account;
@@ -22,7 +21,6 @@ import spark.Spark;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.UUID;
 
 import static io.payments.TestUtils.PLN;
@@ -78,41 +76,6 @@ public class PaymentApiV1IntegrationTest {
 
         // @formatter:off
         executePayment(trackId, paymentRequest, PaymentStatus.COMPLETED, ACCOUNT_A);
-    }
-
-    @Test
-    public void registers_all_received_payments() {
-        String trackId = UUID.randomUUID().toString();
-        PaymentApiRequestV1 paymentRequest = paymentRequestOf1000PLN(trackId, ACCOUNT_A, ACCOUNT_B);
-
-        // @formatter:off
-        given().
-            accept(ContentType.JSON).
-            contentType(ContentType.JSON).
-            body(paymentRequest.toJson()).
-        when().
-            post("/api/v1/payments").
-        then().
-            statusCode(200);
-
-        String paymentsAsJson =
-                given().
-                    accept(ContentType.JSON).
-                when().
-                    get("/api/v1/payments").
-                then().
-                    statusCode(200).
-                extract().body().asString();
-
-        List<Payment> payments = gson().fromJson(
-                paymentsAsJson, new TypeToken<List<Payment>>() {}.getType()
-        );
-        // @formatter:on
-
-        assertThat(payments.size()).isGreaterThanOrEqualTo(1);
-
-        Payment payment = payments.get(0);
-        assertThat(payment.getId()).isEqualTo("0-0");
     }
 
     @Test
