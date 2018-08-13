@@ -31,17 +31,18 @@ mainClassName = "io.payments.PaymentsServiceApp"
 
 dependencies {
     ext {
-        logbackVersion      = '1.1.6'
-        slf4jApiVersion     = '1.7.21'
-        sparkJavaVersion    = '2.7.2'
-        guiceVersion        = '4.2.0'
-        gsonVersion         = '2.8.5'
-        restAssuredVersion  = '3.1.0'
-        junitVersion        = '4.12'
-        assertjVersion      = '3.10.0'
-        jodaMoneyVersion    = "0.12"
-        xodusVersion        = "1.2.3"
-        junitParamsVersion  = "1.1.1"
+        logbackVersion          = '1.1.6'
+        slf4jApiVersion         = '1.7.21'
+        sparkJavaVersion        = '2.7.2'
+        guiceVersion            = '4.2.0'
+        gsonVersion             = '2.8.5'
+        restAssuredVersion      = '3.1.0'
+        junitVersion            = '4.12'
+        assertjVersion          = '3.10.0'
+        jodaMoneyVersion        = "0.12"
+        xodusVersion            = "1.2.3"
+        junitParamsVersion      = "1.1.1"
+        concurrentJunitVersion  = "1.0.2"
     }
 
     compile "org.slf4j:slf4j-api:$slf4jApiVersion",
@@ -58,7 +59,8 @@ dependencies {
                 "io.rest-assured:rest-assured:$restAssuredVersion",
                 "io.rest-assured:json-path:$restAssuredVersion",
                 "org.assertj:assertj-core:$assertjVersion",
-                "pl.pragmatists:JUnitParams:$junitParamsVersion"
+                "pl.pragmatists:JUnitParams:$junitParamsVersion",
+                "com.vmlens:concurrent-junit:$concurrentJunitVersion"
 
 }
 

@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import jetbrains.exodus.ExodusException;
 import jetbrains.exodus.entitystore.Entity;
+import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import jetbrains.exodus.entitystore.PersistentEntityStores;
 import org.slf4j.Logger;
@@ -45,8 +46,18 @@ public class XodusPaymentsRepository implements PaymentsRepository {
             entity.setProperty(Payment.Constants.amount, gson().toJson(payment.getAmount()));
             entity.setProperty(Payment.Constants.trackId, payment.getTrackId());
             entity.setProperty(Payment.Constants.receivedAtUTC, gson().toJson(payment.getReceivedAtUTC()));
+            entity.setProperty(Payment.Constants.paymentsStatus, payment.getPaymentStatus().toString());
 
             return Payment.from(entity);
+        });
+    }
+
+    @Override
+    public void updatePaymentStatus(String id, PaymentStatus paymentStatus) {
+        store.executeInTransaction(txn -> {
+            EntityId entityId = txn.toEntityId(id);
+            Entity payment = txn.getEntity(entityId);
+            payment.setProperty(Payment.Constants.paymentsStatus, paymentStatus.toString());
         });
     }
 

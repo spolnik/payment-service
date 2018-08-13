@@ -74,7 +74,6 @@ public class PaymentApiV1IntegrationTest {
         String trackId = UUID.randomUUID().toString();
         ApiRequest paymentRequest = paymentRequestOf1000PLN(trackId, ACCOUNT_A, ACCOUNT_B);
 
-        // @formatter:off
         executePayment(trackId, paymentRequest, PaymentStatus.COMPLETED, ACCOUNT_A);
     }
 

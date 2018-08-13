@@ -24,6 +24,7 @@ public class Payment {
     private Money amount;
     private String trackId;
     private LocalDateTime receivedAtUTC;
+    private PaymentStatus paymentStatus;
 
     static Payment from(Entity entity) {
         String amountAsJson = (String) entity.getProperty(Constants.amount);
@@ -39,7 +40,8 @@ public class Payment {
                 (String) entity.getProperty(Constants.accountTo),
                 amount,
                 (String) entity.getProperty(Constants.trackId),
-                receivedAtUTC
+                receivedAtUTC,
+                PaymentStatus.valueOf((String) entity.getProperty(Constants.paymentsStatus))
         );
     }
 
@@ -51,5 +53,6 @@ public class Payment {
         static final String amount = "amount";
         static final String trackId = "trackId";
         static final String receivedAtUTC = "receivedAtUTC";
+        static final String paymentsStatus = "paymentsStatus";
     }
 }

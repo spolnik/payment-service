@@ -45,7 +45,8 @@ public class PaymentApiV1RegisterPaymentsIntegrationTest {
             ACCOUNT_B.getAccountId(),
             Money.of(PLN, 1000.0),
             "TRACK_ID",
-            LocalDateTime.now(Clock.systemUTC())
+            LocalDateTime.now(Clock.systemUTC()),
+            PaymentStatus.COMPLETED
     );
 
     private static final String TEST_DB_NAME = "PaymentApiV1RegisterPaymentsIntegrationTest";

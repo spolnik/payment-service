@@ -134,6 +134,7 @@ definitions:
         - "ACCOUNT_FROM_NOT_FOUND"
         - "VALID"
         - "AMOUNT_MISSING"
+        - "IN_PROGRESS"
       trackId:
         type: "string"
   CreateAccountApiRequestV1:

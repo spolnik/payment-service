@@ -6,4 +6,5 @@ import java.util.List;
 public interface PaymentsRepository extends Closeable {
     List<Payment> findAll();
     Payment save(Payment payment);
+    void updatePaymentStatus(String id, PaymentStatus paymentStatus);
 }

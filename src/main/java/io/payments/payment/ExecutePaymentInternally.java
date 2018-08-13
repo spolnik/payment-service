@@ -26,10 +26,14 @@ public class ExecutePaymentInternally implements ExecutePayment {
     public PaymentStatus run(PaymentApiRequestV1 paymentsRequest) {
         Payment payment = store(paymentsRequest.toPayment());
 
-        return accountsRepository.executePayment(
+        PaymentStatus paymentStatus = accountsRepository.executePayment(
                 payment,
                 isValid(payment)
         );
+
+        paymentsRepository.updatePaymentStatus(payment.getId(), paymentStatus);
+
+        return paymentStatus;
     }
 
     private Function<Entity, Entity, PaymentStatus> isValid(Payment payment) {
@@ -57,9 +61,10 @@ public class ExecutePaymentInternally implements ExecutePayment {
     }
 
     private PaymentStatus hasEnoughMoney(Payment payment, Account accountFrom) {
-        return accountFrom.getBalance().getAmount().compareTo(
-                payment.getAmount().getAmount()
-        ) >= 0 ? PaymentStatus.VALID : PaymentStatus.NOT_ENOUGH_MONEY;
+        return (accountFrom.getBalance().isGreaterThan(payment.getAmount()) ||
+                accountFrom.getBalance().isEqual(payment.getAmount()))
+                ? PaymentStatus.VALID
+                : PaymentStatus.NOT_ENOUGH_MONEY;
     }
 
     private boolean hasMoneyInRequiredCurrency(Payment payment, Account accountFrom) {

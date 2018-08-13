@@ -24,7 +24,14 @@ class PaymentApiRequestV1 implements ApiRequest {
 
     Payment toPayment() {
         return new Payment(
-                NOT_SAVED, userId, accountFrom, accountTo, amount, trackId, LocalDateTime.now(Clock.systemUTC())
+                NOT_SAVED,
+                userId,
+                accountFrom,
+                accountTo,
+                amount,
+                trackId,
+                LocalDateTime.now(Clock.systemUTC()),
+                PaymentStatus.IN_PROGRESS
         );
     }
 }

@@ -2,8 +2,10 @@ package io.payments;
 
 import com.google.inject.Guice;
 import io.payments.api.Router;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import spark.Filter;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -27,16 +29,24 @@ public class PaymentsServiceApp {
         port(port);
         staticFiles.location("/public");
 
-        before("/*",
-                (req, res) -> LOG.info("{} {}", req.requestMethod(), req.pathInfo())
-        );
+        before("/*", logIncomingRequest());
 
         path(router.path(), router.routes());
 
-        after("/*", (req, res) -> LOG.info(res.body()));
+        after("/*", (req, res) -> LOG.info("\n\t>>>{}", res.body()));
 
         awaitInitialization();
         LOG.info("Running at: http://localhost:{}", port);
+    }
+
+    @NotNull
+    private Filter logIncomingRequest() {
+        return (req, res) -> {
+            LOG.info("{} {}", req.requestMethod(), req.pathInfo());
+            if ("POST".equals(req.requestMethod())) {
+                LOG.info("\n\t<<<{}", req.body());
+            }
+        };
     }
 
     public static void main(String[] args) {
