@@ -2,9 +2,8 @@ package io.payments;
 
 import com.google.inject.Guice;
 import io.payments.api.Router;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import spark.Filter;
 
 import javax.inject.Inject;
@@ -13,9 +12,9 @@ import java.util.Optional;
 
 import static spark.Spark.*;
 
+@Slf4j
 public class PaymentsServiceApp {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PaymentsServiceApp.class);
     private static final int DEFAULT_PORT = 4000;
 
     private final Router router;
@@ -33,18 +32,18 @@ public class PaymentsServiceApp {
 
         path(router.path(), router.routes());
 
-        after("/*", (req, res) -> LOG.info("\n\t<<<< {}", res.body()));
+        after("/*", (req, res) -> log.info("\n\t<<<< {}", res.body()));
 
         awaitInitialization();
-        LOG.info("Running at: http://localhost:{}", port);
+        log.info("Running at: http://localhost:{}", port);
     }
 
     @NotNull
     private Filter logIncomingRequest() {
         return (req, res) -> {
-            LOG.info("{} {}", req.requestMethod(), req.pathInfo());
+            log.info("{} {}", req.requestMethod(), req.pathInfo());
             if ("POST".equals(req.requestMethod())) {
-                LOG.info("\n\t>>>> {}", req.body());
+                log.info("\n\t>>>> {}", req.body());
             }
         };
     }

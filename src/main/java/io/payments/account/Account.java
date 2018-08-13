@@ -1,19 +1,19 @@
 package io.payments.account;
 
 import jetbrains.exodus.entitystore.Entity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.joda.money.Money;
 
 import static io.payments.api.Common.gson;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 public class Account {
 
-    static String NOT_SAVED = null;
+    static final String NOT_SAVED = null;
 
     private String id;
     private String userId;
@@ -33,6 +33,10 @@ public class Account {
     }
 
     static class Constants {
+        private Constants() {
+            // constants
+        }
+
         static final String ENTITY_TYPE = "Accounts";
         static final String userId = "userId";
         static final String accountId = "accountId";

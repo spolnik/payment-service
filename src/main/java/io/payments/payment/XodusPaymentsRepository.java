@@ -7,8 +7,7 @@ import jetbrains.exodus.entitystore.Entity;
 import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import jetbrains.exodus.entitystore.PersistentEntityStores;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,9 +15,8 @@ import java.util.stream.Collectors;
 import static io.payments.api.Common.gson;
 import static java.util.stream.StreamSupport.stream;
 
+@Slf4j
 public class XodusPaymentsRepository implements PaymentsRepository {
-
-    private static final Logger LOG = LoggerFactory.getLogger(XodusPaymentsRepository.class);
 
     private final PersistentEntityStore store;
 
@@ -66,7 +64,7 @@ public class XodusPaymentsRepository implements PaymentsRepository {
         try {
             store.close();
         } catch (ExodusException e) {
-            LOG.error("Could not close payment store: {}", e.getMessage(), e);
+            log.error("Could not close payment store: {}", e.getMessage(), e);
         }
     }
 }

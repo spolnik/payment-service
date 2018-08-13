@@ -1,9 +1,7 @@
 package io.payments.payment;
 
 import io.payments.api.ApiRequest;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.joda.money.Money;
 
 import java.time.Clock;
@@ -11,7 +9,9 @@ import java.time.LocalDateTime;
 
 import static io.payments.payment.Payment.NOT_SAVED;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 class PaymentApiRequestV1 implements ApiRequest {

@@ -1,11 +1,11 @@
 package io.payments.payment;
 
 import io.payments.api.ApiResponse;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 class PaymentApiResponseV1 implements ApiResponse {

@@ -5,14 +5,12 @@ import com.google.inject.name.Named;
 import io.payments.api.Function;
 import io.payments.payment.Payment;
 import io.payments.payment.PaymentStatus;
-import io.payments.payment.XodusPaymentsRepository;
 import jetbrains.exodus.ExodusException;
 import jetbrains.exodus.entitystore.Entity;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import jetbrains.exodus.entitystore.PersistentEntityStores;
+import lombok.extern.slf4j.Slf4j;
 import org.joda.money.Money;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,9 +19,8 @@ import java.util.stream.Collectors;
 import static io.payments.api.Common.gson;
 import static java.util.stream.StreamSupport.stream;
 
+@Slf4j
 public class XodusAccountsRepository implements AccountsRepository {
-
-    private static final Logger LOG = LoggerFactory.getLogger(XodusPaymentsRepository.class);
 
     private final PersistentEntityStore store;
 
@@ -128,7 +125,7 @@ public class XodusAccountsRepository implements AccountsRepository {
         try {
             store.close();
         } catch (ExodusException e) {
-            LOG.error("Could not close payment store: {}", e.getMessage(), e);
+            log.error("Could not close payment store: {}", e.getMessage(), e);
         }
     }
 }

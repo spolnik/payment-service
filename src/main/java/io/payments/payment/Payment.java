@@ -1,16 +1,16 @@
 package io.payments.payment;
 
 import jetbrains.exodus.entitystore.Entity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.joda.money.Money;
 
 import java.time.LocalDateTime;
 
 import static io.payments.api.Common.gson;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 public class Payment {
@@ -46,6 +46,10 @@ public class Payment {
     }
 
     static class Constants {
+        private Constants() {
+            // constants
+        }
+
         static final String ENTITY_TYPE = "Payments";
         static final String userId = "userId";
         static final String accountFrom = "accountFrom";

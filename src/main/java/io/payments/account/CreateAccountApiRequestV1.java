@@ -1,14 +1,14 @@
 package io.payments.account;
 
 import io.payments.api.ApiRequest;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.joda.money.Money;
 
 import static io.payments.account.Account.NOT_SAVED;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 class CreateAccountApiRequestV1 implements ApiRequest {
