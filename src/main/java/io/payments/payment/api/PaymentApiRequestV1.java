@@ -1,18 +1,20 @@
-package io.payments.payment;
+package io.payments.payment.api;
 
 import io.payments.api.ApiRequest;
+import io.payments.payment.domain.Payment;
+import io.payments.payment.domain.PaymentStatus;
 import lombok.*;
 import org.joda.money.Money;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
 
-import static io.payments.payment.Payment.NOT_SAVED;
+import static io.payments.payment.domain.Payment.NOT_SAVED;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-class PaymentApiRequestV1 implements ApiRequest {
+public class PaymentApiRequestV1 implements ApiRequest {
 
     private String userId;
     private String accountFrom;
@@ -20,7 +22,7 @@ class PaymentApiRequestV1 implements ApiRequest {
     private Money amount;
     private String trackId;
 
-    Payment toPayment() {
+    public Payment toPayment() {
         return new Payment(
                 NOT_SAVED,
                 userId,

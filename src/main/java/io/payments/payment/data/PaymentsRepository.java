@@ -1,4 +1,7 @@
-package io.payments.payment;
+package io.payments.payment.data;
+
+import io.payments.payment.domain.Payment;
+import io.payments.payment.domain.PaymentStatus;
 
 import java.io.Closeable;
 import java.util.List;

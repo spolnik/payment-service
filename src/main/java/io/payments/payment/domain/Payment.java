@@ -1,4 +1,4 @@
-package io.payments.payment;
+package io.payments.payment.domain;
 
 import jetbrains.exodus.entitystore.Entity;
 import lombok.*;
@@ -13,7 +13,7 @@ import static io.payments.api.Common.gson;
 @NoArgsConstructor
 public class Payment {
 
-    static final String NOT_SAVED = null;
+    public static final String NOT_SAVED = null;
 
     private String id;
     private String userId;
@@ -24,7 +24,7 @@ public class Payment {
     private LocalDateTime receivedAtUTC;
     private PaymentStatus paymentStatus;
 
-    static Payment from(Entity entity) {
+    public static Payment from(Entity entity) {
         String amountAsJson = (String) entity.getProperty(Constants.amount);
         Money amount = gson().fromJson(amountAsJson, Money.class);
 
@@ -43,18 +43,18 @@ public class Payment {
         );
     }
 
-    static class Constants {
+    public static class Constants {
         private Constants() {
             // constants
         }
 
-        static final String ENTITY_TYPE = "Payments";
-        static final String userId = "userId";
-        static final String accountFrom = "accountFrom";
-        static final String accountTo = "accountTo";
-        static final String amount = "amount";
-        static final String trackId = "trackId";
-        static final String receivedAtUTC = "receivedAtUTC";
-        static final String paymentsStatus = "paymentsStatus";
+        public static final String ENTITY_TYPE = "Payments";
+        public static final String userId = "userId";
+        public static final String accountFrom = "accountFrom";
+        public static final String accountTo = "accountTo";
+        public static final String amount = "amount";
+        public static final String trackId = "trackId";
+        public static final String receivedAtUTC = "receivedAtUTC";
+        public static final String paymentsStatus = "paymentsStatus";
     }
 }

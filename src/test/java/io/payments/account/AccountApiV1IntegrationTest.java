@@ -2,6 +2,10 @@ package io.payments.account;
 
 import io.payments.PaymentsServiceApp;
 import io.payments.TestUtils;
+import io.payments.account.domain.Account;
+import io.payments.account.api.CreateAccountApiRequestV1;
+import io.payments.account.api.CreateAccountApiResponseV1;
+import io.payments.account.domain.AccountStatus;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.AfterClass;

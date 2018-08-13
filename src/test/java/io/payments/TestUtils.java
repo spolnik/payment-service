@@ -1,7 +1,6 @@
 package io.payments;
 
-import io.payments.account.Account;
-import io.payments.payment.PaymentApiV1IntegrationTest;
+import io.payments.account.domain.Account;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 

@@ -2,10 +2,13 @@ package io.payments.payment;
 
 import io.payments.PaymentsServiceApp;
 import io.payments.TestUtils;
-import io.payments.account.Account;
-import io.payments.account.AccountsRepository;
-import io.payments.account.XodusAccountsRepository;
+import io.payments.account.domain.Account;
+import io.payments.account.data.AccountsRepository;
+import io.payments.account.data.XodusAccountsRepository;
 import io.payments.api.ApiRequest;
+import io.payments.payment.api.PaymentApiRequestV1;
+import io.payments.payment.api.PaymentApiResponseV1;
+import io.payments.payment.domain.PaymentStatus;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import junitparams.JUnitParamsRunner;

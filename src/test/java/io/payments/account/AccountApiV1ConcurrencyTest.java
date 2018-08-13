@@ -5,6 +5,8 @@ import com.anarsoft.vmlens.concurrent.junit.ThreadCount;
 import com.google.gson.reflect.TypeToken;
 import io.payments.PaymentsServiceApp;
 import io.payments.TestUtils;
+import io.payments.account.domain.Account;
+import io.payments.account.api.CreateAccountApiRequestV1;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.After;

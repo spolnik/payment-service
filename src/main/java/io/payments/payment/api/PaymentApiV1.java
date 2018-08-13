@@ -1,7 +1,11 @@
-package io.payments.payment;
+package io.payments.payment.api;
 
 import io.payments.api.Common;
 import io.payments.api.VersionedApi;
+import io.payments.payment.command.ExecutePayment;
+import io.payments.payment.domain.Payment;
+import io.payments.payment.domain.PaymentStatus;
+import io.payments.payment.query.FindAllPayments;
 import spark.Route;
 import spark.RouteGroup;
 

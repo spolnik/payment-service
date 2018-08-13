@@ -1,8 +1,10 @@
-package io.payments.account;
+package io.payments.account.data;
 
+import io.payments.account.domain.Account;
+import io.payments.account.domain.AccountStatus;
 import io.payments.api.Function;
-import io.payments.payment.Payment;
-import io.payments.payment.PaymentStatus;
+import io.payments.payment.domain.Payment;
+import io.payments.payment.domain.PaymentStatus;
 import jetbrains.exodus.entitystore.Entity;
 
 import java.io.Closeable;

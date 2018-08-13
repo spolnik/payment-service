@@ -3,11 +3,25 @@ package io.payments;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
-import io.payments.account.*;
+import io.payments.account.api.AccountApiV1;
+import io.payments.account.command.CreateAccount;
+import io.payments.account.command.CreateAccountInternally;
+import io.payments.account.data.AccountsRepository;
+import io.payments.account.data.XodusAccountsRepository;
+import io.payments.account.query.FindAccountById;
+import io.payments.account.query.FindAccountByIdInternally;
+import io.payments.account.query.FindAllAccounts;
+import io.payments.account.query.FindAllAccountsInternally;
 import io.payments.api.PaymentsRouter;
 import io.payments.api.Router;
 import io.payments.api.VersionedApi;
-import io.payments.payment.*;
+import io.payments.payment.api.PaymentApiV1;
+import io.payments.payment.command.ExecutePayment;
+import io.payments.payment.command.ExecutePaymentInternally;
+import io.payments.payment.data.PaymentsRepository;
+import io.payments.payment.data.XodusPaymentsRepository;
+import io.payments.payment.query.FindAllPayments;
+import io.payments.payment.query.FindAllPaymentsInternally;
 
 public class PaymentsModule extends AbstractModule {
     private final String dbName;

@@ -1,4 +1,7 @@
-package io.payments.account;
+package io.payments.account.query;
+
+import io.payments.account.data.AccountsRepository;
+import io.payments.account.domain.Account;
 
 import javax.inject.Inject;
 import java.util.List;

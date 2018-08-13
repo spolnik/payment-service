@@ -1,5 +1,7 @@
 package io.payments.account;
 
+import io.payments.account.domain.Account;
+import io.payments.account.api.CreateAccountApiRequestV1;
 import org.joda.money.Money;
 import org.junit.Test;
 

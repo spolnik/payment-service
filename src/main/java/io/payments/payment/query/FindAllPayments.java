@@ -1,4 +1,6 @@
-package io.payments.payment;
+package io.payments.payment.query;
+
+import io.payments.payment.domain.Payment;
 
 import java.util.List;
 

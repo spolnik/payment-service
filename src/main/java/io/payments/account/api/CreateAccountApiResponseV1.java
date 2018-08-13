@@ -1,4 +1,4 @@
-package io.payments.payment;
+package io.payments.account.api;
 
 import io.payments.api.ApiResponse;
 import lombok.*;
@@ -6,8 +6,9 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-class PaymentApiResponseV1 implements ApiResponse {
-    private String userId;
+public class CreateAccountApiResponseV1 implements ApiResponse {
+
+    private String accountId;
     private String status;
     private String trackId;
 }

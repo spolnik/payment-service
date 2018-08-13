@@ -1,8 +1,12 @@
-package io.payments.payment;
+package io.payments.payment.command;
 
-import io.payments.account.Account;
-import io.payments.account.AccountsRepository;
+import io.payments.account.domain.Account;
+import io.payments.account.data.AccountsRepository;
 import io.payments.api.Function;
+import io.payments.payment.domain.Payment;
+import io.payments.payment.api.PaymentApiRequestV1;
+import io.payments.payment.domain.PaymentStatus;
+import io.payments.payment.data.PaymentsRepository;
 import jetbrains.exodus.entitystore.Entity;
 
 import javax.inject.Inject;

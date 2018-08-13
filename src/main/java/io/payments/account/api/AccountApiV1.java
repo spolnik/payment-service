@@ -1,5 +1,10 @@
-package io.payments.account;
+package io.payments.account.api;
 
+import io.payments.account.domain.AccountStatus;
+import io.payments.account.command.CreateAccount;
+import io.payments.account.query.FindAccountById;
+import io.payments.account.query.FindAllAccounts;
+import io.payments.account.domain.Account;
 import io.payments.api.Common;
 import io.payments.api.VersionedApi;
 import spark.Route;

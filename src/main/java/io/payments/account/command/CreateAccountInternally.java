@@ -1,4 +1,8 @@
-package io.payments.account;
+package io.payments.account.command;
+
+import io.payments.account.api.CreateAccountApiRequestV1;
+import io.payments.account.data.AccountsRepository;
+import io.payments.account.domain.AccountStatus;
 
 import javax.inject.Inject;
 

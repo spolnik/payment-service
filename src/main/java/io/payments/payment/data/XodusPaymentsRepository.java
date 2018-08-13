@@ -1,7 +1,9 @@
-package io.payments.payment;
+package io.payments.payment.data;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import io.payments.payment.domain.Payment;
+import io.payments.payment.domain.PaymentStatus;
 import jetbrains.exodus.ExodusException;
 import jetbrains.exodus.entitystore.Entity;
 import jetbrains.exodus.entitystore.EntityId;

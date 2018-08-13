@@ -1,4 +1,4 @@
-package io.payments.payment;
+package io.payments.payment.domain;
 
 public enum PaymentStatus {
     COMPLETED,

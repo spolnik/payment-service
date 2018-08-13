@@ -1,5 +1,9 @@
 package io.payments.payment;
 
+import io.payments.payment.api.PaymentApiRequestV1;
+import io.payments.payment.api.PaymentApiResponseV1;
+import io.payments.payment.domain.Payment;
+import io.payments.payment.domain.PaymentStatus;
 import org.joda.money.Money;
 import org.junit.Test;
 
