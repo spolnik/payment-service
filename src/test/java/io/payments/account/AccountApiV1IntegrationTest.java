@@ -107,22 +107,32 @@ public class AccountApiV1IntegrationTest {
             post("/api/v1/accounts").
         then().
             statusCode(200);
-
-        String accountAsJson =
-            given().
-                accept(ContentType.JSON).
-            when().
-                get("/api/v1/accounts/" + newAccount.getAccountId()).
-            then().
-                statusCode(200).
-            extract().body().asString();
         // @formatter:on
 
+        String accountAsJson = findAccountById(newAccount.getAccountId(), 200);
         Account account = gson().fromJson(accountAsJson, Account.class);
 
         assertThat(account.getUserId()).isEqualTo(newAccount.getUserId());
         assertThat(account.getAccountId()).isEqualTo(newAccount.getAccountId());
         assertThat(account.getBalance()).isEqualTo(newAccount.getBalance());
+    }
+
+    @Test
+    public void returns_404_when_account_not_found() {
+        String accountAsJson = findAccountById("DO_NOT_EXIST", 404);
+        assertThat(accountAsJson).isEqualTo("<html><body><h2>404 Not found</h2></body></html>");
+    }
+
+    private String findAccountById(String accountId, int expectedStatusCode) {
+        // @formatter:off
+        return given().
+                accept(ContentType.JSON).
+            when().
+                get("/api/v1/accounts/" + accountId).
+            then().
+                statusCode(expectedStatusCode).
+            extract().body().asString();
+        // @formatter:on
     }
 
     private CreateAccountApiResponseV1 createNewAccount(CreateAccountApiRequestV1 createAccountRequest) {
