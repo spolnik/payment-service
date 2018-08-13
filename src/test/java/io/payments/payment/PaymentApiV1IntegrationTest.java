@@ -78,9 +78,9 @@ public class PaymentApiV1IntegrationTest {
     }
 
     @Test
-    public void makes_money_transfer_for_payment_of_1000_PLN_from_account_C_with_initial_balance_10000_to_account_D_with_initial_balance_0() {
+    public void makes_money_transfer_for_payment_of_10000_PLN_from_account_C_with_initial_balance_10000_to_account_D_with_initial_balance_0() {
         String trackId = UUID.randomUUID().toString();
-        PaymentApiRequestV1 paymentRequest = paymentRequestOf1000PLN(trackId, ACCOUNT_C, ACCOUNT_D);
+        PaymentApiRequestV1 paymentRequest = paymentRequestPLN(trackId, ACCOUNT_C, ACCOUNT_D, 10_000);
 
         // @formatter:off
         given().
@@ -93,14 +93,14 @@ public class PaymentApiV1IntegrationTest {
             statusCode(200);
         // @formatter:on
 
-        checkAccount(ACCOUNT_C.getAccountId(), ACCOUNT_C.getUserId(), Money.of(PLN, 9000));
-        checkAccount(ACCOUNT_D.getAccountId(), ACCOUNT_D.getUserId(), Money.of(PLN, 1000));
+        checkAccount(ACCOUNT_C.getAccountId(), ACCOUNT_C.getUserId(), Money.of(PLN, 0));
+        checkAccount(ACCOUNT_D.getAccountId(), ACCOUNT_D.getUserId(), Money.of(PLN, 10_000));
     }
 
     @Test
     public void rejects_money_transfer_when_not_enough_money_on_payer_account() {
         String trackId = UUID.randomUUID().toString();
-        ApiRequest paymentRequest = paymentRequestPLN(trackId, ACCOUNT_A, ACCOUNT_B, 1000000);
+        ApiRequest paymentRequest = paymentRequestPLN(trackId, ACCOUNT_A, ACCOUNT_B, 1_000_000);
         executePayment(trackId, paymentRequest, PaymentStatus.NOT_ENOUGH_MONEY, ACCOUNT_A);
     }
 
