@@ -6,9 +6,7 @@ import org.joda.money.Money;
 
 import static io.payments.api.Common.gson;
 
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Account {

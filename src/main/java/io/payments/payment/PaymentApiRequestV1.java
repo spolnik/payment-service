@@ -9,9 +9,7 @@ import java.time.LocalDateTime;
 
 import static io.payments.payment.Payment.NOT_SAVED;
 
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 class PaymentApiRequestV1 implements ApiRequest {

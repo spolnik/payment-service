@@ -3,9 +3,7 @@ package io.payments.account;
 import io.payments.api.ApiResponse;
 import lombok.*;
 
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 class CreateAccountApiResponseV1 implements ApiResponse {

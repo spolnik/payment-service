@@ -6,9 +6,7 @@ import org.joda.money.Money;
 
 import static io.payments.account.Account.NOT_SAVED;
 
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 class CreateAccountApiRequestV1 implements ApiRequest {

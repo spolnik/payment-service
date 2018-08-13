@@ -8,14 +8,12 @@ import java.time.LocalDateTime;
 
 import static io.payments.api.Common.gson;
 
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Payment {
 
-    static String NOT_SAVED = null;
+    static final String NOT_SAVED = null;
 
     private String id;
     private String userId;
