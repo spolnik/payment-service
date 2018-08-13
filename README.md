@@ -23,6 +23,7 @@ needed for service functionality to work in isolated way
 - rest-assured
 - assertj
 - junit
+- concurrent-unit (concurrency tests)
 
 ## Infrastructure
 
