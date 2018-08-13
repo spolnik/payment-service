@@ -1,5 +1,6 @@
 package io.payments.account;
 
+import io.payments.api.Common;
 import io.payments.api.VersionedApi;
 import spark.Route;
 import spark.RouteGroup;
@@ -9,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static io.payments.api.Common.gson;
-import static io.payments.api.Common.json;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
@@ -39,14 +39,14 @@ public class AccountApiV1 implements VersionedApi {
     public RouteGroup routes() {
         return () -> {
             get("/:accountId", findAccount());
-            post("", json(), createAccount());
+            post("", Common.APPLICATION_JSON, createAccount());
             get("", findAllAccounts());
         };
     }
 
     private Route findAllAccounts() {
         return (req, res) -> {
-            res.type(json());
+            res.type(Common.APPLICATION_JSON);
 
             List<Account> accounts = findAllAccounts.run();
             return gson().toJson(accounts);
@@ -55,7 +55,7 @@ public class AccountApiV1 implements VersionedApi {
 
     private Route createAccount() {
         return (req, res) -> {
-            res.type(json());
+            res.type(Common.APPLICATION_JSON);
 
             CreateAccountApiRequestV1 createAccountRequest =
                     gson().fromJson(req.body(), CreateAccountApiRequestV1.class);
@@ -79,7 +79,7 @@ public class AccountApiV1 implements VersionedApi {
             Optional<Account> account = findAccountById.run(req.params(":accountId"));
 
             if (account.isPresent()) {
-                res.type(json());
+                res.type(Common.APPLICATION_JSON);
                 return gson().toJson(account.get());
             } else {
                 res.status(404);

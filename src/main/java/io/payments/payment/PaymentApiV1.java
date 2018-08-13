@@ -1,5 +1,6 @@
 package io.payments.payment;
 
+import io.payments.api.Common;
 import io.payments.api.VersionedApi;
 import spark.Route;
 import spark.RouteGroup;
@@ -9,7 +10,6 @@ import java.util.List;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static io.payments.api.Common.gson;
-import static io.payments.api.Common.json;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
@@ -35,7 +35,7 @@ public class PaymentApiV1 implements VersionedApi {
     @Override
     public RouteGroup routes() {
         return () -> {
-            post("", json(), executePayment());
+            post("", Common.APPLICATION_JSON, executePayment());
             get("", findAllPayments());
         };
     }
@@ -47,7 +47,7 @@ public class PaymentApiV1 implements VersionedApi {
 
     private Route findAllPayments() {
         return (req, res) -> {
-            res.type(json());
+            res.type(Common.APPLICATION_JSON);
 
             List<Payment> payments = findAllPayments.run();
             return gson().toJson(payments);
@@ -56,7 +56,7 @@ public class PaymentApiV1 implements VersionedApi {
 
     private Route executePayment() {
         return (req, res) -> {
-            res.type(json());
+            res.type(Common.APPLICATION_JSON);
             PaymentApiRequestV1 paymentsRequest =
                     gson().fromJson(req.body(), PaymentApiRequestV1.class);
 

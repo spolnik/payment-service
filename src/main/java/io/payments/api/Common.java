@@ -7,6 +7,13 @@ import org.joda.money.Money;
 import java.lang.reflect.Type;
 
 public class Common {
+
+    public static final String APPLICATION_JSON = "application/json";
+
+    private Common() {
+        // static only
+    }
+
     private static final Gson gson;
 
     static {
@@ -16,13 +23,10 @@ public class Common {
     }
 
     public static Gson gson() { return gson; }
-    public static String json() {
-        return "application/json";
-    }
 
     private static class MoneyTransformer implements JsonSerializer<Money>, JsonDeserializer<Money> {
         @Override
-        public Money deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        public Money deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
             JsonObject jsonObject = json.getAsJsonObject();
             return Money.of(
                     CurrencyUnit.getInstance(jsonObject.get("currency").getAsString()),
