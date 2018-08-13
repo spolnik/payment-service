@@ -1,4 +1,4 @@
-# MoneyPal [![Build Status](https://travis-ci.org/spolnik/payment-service.svg?branch=master)](https://travis-ci.org/spolnik/payment-service) [![codecov](https://codecov.io/gh/spolnik/payment-service/branch/master/graph/badge.svg)](https://codecov.io/gh/spolnik/payment-service) 
+# MoneyPal [![Build Status](https://travis-ci.org/spolnik/payment-service.svg?branch=master)](https://travis-ci.org/spolnik/payment-service) [![codecov](https://codecov.io/gh/spolnik/payment-service/branch/master/graph/badge.svg)](https://codecov.io/gh/spolnik/payment-service) [![SonarQube](https://sonarcloud.io/api/project_badges/measure?project=io.payments%3Apayment-service&metric=alert_status)](https://sonarcloud.io/dashboard?id=io.payments%3Apayment-service)
 
 Money transfer microservice example - check [Swagger API Docs](https://moneypal.herokuapp.com/).
 
