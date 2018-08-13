@@ -1,18 +1,13 @@
 package io.payments.api;
 
-import spark.Route;
 import spark.RouteGroup;
 import spark.Spark;
 
 import javax.inject.Inject;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-
-import static io.payments.api.Common.json;
-import static spark.Spark.get;
 
 public class PaymentsRouter implements Router {
 
@@ -30,15 +25,7 @@ public class PaymentsRouter implements Router {
             List<String> versions = api.stream()
                     .map(VersionedApi::version).distinct().collect(Collectors.toList());
 
-            get("", json(), versionsPath(versions));
             versions.forEach(versionedPath());
-        };
-    }
-
-    private Route versionsPath(List<String> versions) {
-        return (req, res) -> {
-            res.type(json());
-            return String.format("{\"versions\":%s}", Arrays.toString(versions.toArray()));
         };
     }
 

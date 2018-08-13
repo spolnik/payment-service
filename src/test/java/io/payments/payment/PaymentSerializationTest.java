@@ -1,6 +1,5 @@
 package io.payments.payment;
 
-import io.payments.account.Account;
 import org.joda.money.Money;
 import org.junit.Test;
 
