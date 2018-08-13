@@ -48,18 +48,7 @@ public class AccountApiV1IntegrationTest {
         CreateAccountApiRequestV1 createAccountRequest =
                 createNewAccountRequest(trackId, newAccount);
 
-        // @formatter:off
-        CreateAccountApiResponseV1 response =
-                given().
-                    accept(ContentType.JSON).
-                    contentType(ContentType.JSON).
-                    body(createAccountRequest.toJson()).
-                when().
-                    post("/api/v1/accounts").
-                then().
-                    statusCode(200).
-                extract().body().as(CreateAccountApiResponseV1.class);
-        // @formatter:on
+        CreateAccountApiResponseV1 response = createNewAccount(createAccountRequest);
 
         assertThat(response.getAccountId()).isEqualTo(createAccountRequest.getAccountId());
         assertThat(response.getStatus()).isEqualTo(AccountStatus.CREATED.toString());
@@ -134,6 +123,22 @@ public class AccountApiV1IntegrationTest {
         assertThat(account.getUserId()).isEqualTo(newAccount.getUserId());
         assertThat(account.getAccountId()).isEqualTo(newAccount.getAccountId());
         assertThat(account.getBalance()).isEqualTo(newAccount.getBalance());
+    }
+
+    private CreateAccountApiResponseV1 createNewAccount(CreateAccountApiRequestV1 createAccountRequest) {
+        // @formatter:off
+        return given().
+            accept(ContentType.JSON).
+            contentType(ContentType.JSON).
+            body(createAccountRequest.toJson()).
+        when().
+            post("/api/v1/accounts").
+        then().
+            statusCode(200).
+        extract()
+            .body()
+            .as(CreateAccountApiResponseV1.class);
+        // @formatter:on
     }
 
     private CreateAccountApiRequestV1 createNewAccountRequest(String trackId, Account account) {

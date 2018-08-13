@@ -14,9 +14,12 @@ import org.joda.money.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static io.payments.api.Common.gson;
+import static java.util.stream.StreamSupport.stream;
 
 public class XodusAccountsRepository implements AccountsRepository {
 
@@ -90,6 +93,15 @@ public class XodusAccountsRepository implements AccountsRepository {
 
             return transferMoney(accountFromEntity, accountToEntity, payment.getAmount());
         });
+    }
+
+    @Override
+    public List<Account> findAll() {
+        return store.computeInReadonlyTransaction(txn ->
+                stream(txn.getAll(Account.Constants.ENTITY_TYPE).spliterator(), false)
+                        .map(Account::from)
+                        .collect(Collectors.toList())
+        );
     }
 
     private PaymentStatus transferMoney(Entity accountFromEntity, Entity accountToEntity, Money amount) {

@@ -3,12 +3,12 @@ package io.payments.account;
 import javax.inject.Inject;
 import java.util.Optional;
 
-public class FindAccountInternally implements FindAccount {
+public class FindAccountByIdInternally implements FindAccountById {
 
     private final AccountsRepository accountsRepository;
 
     @Inject
-    public FindAccountInternally(AccountsRepository accountsRepository) {
+    public FindAccountByIdInternally(AccountsRepository accountsRepository) {
         this.accountsRepository = accountsRepository;
     }
 

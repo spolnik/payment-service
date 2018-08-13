@@ -19,6 +19,21 @@ schemes:
 - "https"
 paths:
   /payments:
+    get:
+      tags:
+      - "payment"
+      summary: "Get all executed payments"
+      description: ""
+      operationId: "findAllPayments"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Successful Operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Payment"
     post:
       tags:
       - "payment"
@@ -41,22 +56,22 @@ paths:
           description: "Payment completed successfully"
           schema:
             $ref: "#/definitions/PaymentApiResponseV1"
+  /accounts:
     get:
       tags:
-      - "payment"
-      summary: "Get all executed payments"
+      - "account"
+      summary: "Find all accounts"
       description: ""
-      operationId: "findAllPayments"
+      operationId: "findAllAccounts"
       produces:
       - "application/json"
       responses:
         200:
-          description: "Successful Operation"
+          description: "All accounts queried successfully"
           schema:
             type: "array"
             items:
-              $ref: "#/definitions/Payment"
-  /accounts:
+              $ref: "#/definitions/Account"
     post:
       tags:
       - "account"

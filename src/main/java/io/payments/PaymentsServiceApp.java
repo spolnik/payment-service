@@ -33,7 +33,7 @@ public class PaymentsServiceApp {
 
         path(router.path(), router.routes());
 
-        after("/*", (req, res) -> LOG.info("\n\t>>>{}", res.body()));
+        after("/*", (req, res) -> LOG.info("\n\t<<<< {}", res.body()));
 
         awaitInitialization();
         LOG.info("Running at: http://localhost:{}", port);
@@ -44,7 +44,7 @@ public class PaymentsServiceApp {
         return (req, res) -> {
             LOG.info("{} {}", req.requestMethod(), req.pathInfo());
             if ("POST".equals(req.requestMethod())) {
-                LOG.info("\n\t<<<{}", req.body());
+                LOG.info("\n\t>>>> {}", req.body());
             }
         };
     }

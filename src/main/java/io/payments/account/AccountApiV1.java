@@ -5,6 +5,7 @@ import spark.Route;
 import spark.RouteGroup;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Optional;
 
 import static io.payments.api.Common.gson;
@@ -14,16 +15,19 @@ import static spark.Spark.post;
 
 public class AccountApiV1 implements VersionedApi {
 
-    private final FindAccount findAccount;
+    private final FindAccountById findAccountById;
     private final CreateAccount createAccount;
+    private final FindAllAccounts findAllAccounts;
 
     @Inject
     public AccountApiV1(
-            FindAccount findAccount,
-            CreateAccount createAccount
+            FindAccountById findAccountById,
+            CreateAccount createAccount,
+            FindAllAccounts findAllAccounts
     ) {
-        this.findAccount = findAccount;
+        this.findAccountById = findAccountById;
         this.createAccount = createAccount;
+        this.findAllAccounts = findAllAccounts;
     }
 
     @Override
@@ -36,6 +40,16 @@ public class AccountApiV1 implements VersionedApi {
         return () -> {
             get("/:accountId", findAccount());
             post("", json(), createAccount());
+            get("", findAllAccounts());
+        };
+    }
+
+    private Route findAllAccounts() {
+        return (req, res) -> {
+            res.type(json());
+
+            List<Account> accounts = findAllAccounts.run();
+            return gson().toJson(accounts);
         };
     }
 
@@ -62,7 +76,7 @@ public class AccountApiV1 implements VersionedApi {
 
     private Route findAccount() {
         return (req, res) -> {
-            Optional<Account> account = findAccount.run(req.params(":accountId"));
+            Optional<Account> account = findAccountById.run(req.params(":accountId"));
 
             if (account.isPresent()) {
                 res.type(json());
