@@ -1,6 +1,5 @@
 package io.payments.payment.api;
 
-import io.payments.api.Common;
 import io.payments.api.VersionedApi;
 import io.payments.payment.command.ExecutePayment;
 import io.payments.payment.domain.Payment;
@@ -13,6 +12,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static io.payments.api.Common.APPLICATION_JSON;
 import static io.payments.api.Common.gson;
 import static spark.Spark.get;
 import static spark.Spark.post;
@@ -39,8 +39,8 @@ public class PaymentApiV1 implements VersionedApi {
     @Override
     public RouteGroup routes() {
         return () -> {
-            post("", Common.APPLICATION_JSON, executePayment());
             get("", findAllPayments());
+            post("", APPLICATION_JSON, executePayment());
         };
     }
 
@@ -51,7 +51,7 @@ public class PaymentApiV1 implements VersionedApi {
 
     private Route findAllPayments() {
         return (req, res) -> {
-            res.type(Common.APPLICATION_JSON);
+            res.type(APPLICATION_JSON);
 
             List<Payment> payments = findAllPayments.run();
             return gson().toJson(payments);
@@ -60,14 +60,12 @@ public class PaymentApiV1 implements VersionedApi {
 
     private Route executePayment() {
         return (req, res) -> {
-            res.type(Common.APPLICATION_JSON);
+            res.type(APPLICATION_JSON);
+
             PaymentApiRequestV1 paymentsRequest =
                     gson().fromJson(req.body(), PaymentApiRequestV1.class);
 
-            PaymentStatus validationStatus = validate(paymentsRequest);
-            PaymentStatus status = validationStatus == PaymentStatus.VALID
-                    ? executePayment.run(paymentsRequest)
-                    : validationStatus;
+            PaymentStatus status = validateAndExecute(paymentsRequest);
 
             return new PaymentApiResponseV1(
                     paymentsRequest.getUserId(),
@@ -77,7 +75,7 @@ public class PaymentApiV1 implements VersionedApi {
         };
     }
 
-    private PaymentStatus validate(PaymentApiRequestV1 paymentsRequest) {
+    private PaymentStatus validateAndExecute(PaymentApiRequestV1 paymentsRequest) {
         if (isNullOrEmpty(paymentsRequest.getUserId())) {
             return PaymentStatus.USER_ID_MISSING;
         }
@@ -94,6 +92,6 @@ public class PaymentApiV1 implements VersionedApi {
             return PaymentStatus.AMOUNT_MISSING;
         }
 
-        return PaymentStatus.VALID;
+        return executePayment.run(paymentsRequest);
     }
 }
