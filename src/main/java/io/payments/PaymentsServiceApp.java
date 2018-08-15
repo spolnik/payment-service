@@ -7,15 +7,16 @@ import org.jetbrains.annotations.NotNull;
 import spark.Filter;
 
 import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.Optional;
 
+import static java.lang.Integer.parseInt;
+import static java.util.Arrays.stream;
 import static spark.Spark.*;
 
 @Slf4j
 public class PaymentsServiceApp {
 
     private static final int DEFAULT_PORT = 4000;
+    private static final String HTTP_POST = "POST";
 
     private final Router router;
 
@@ -42,34 +43,50 @@ public class PaymentsServiceApp {
     private Filter logIncomingRequest() {
         return (req, res) -> {
             log.info("{} {}", req.requestMethod(), req.pathInfo());
-            if ("POST".equals(req.requestMethod())) {
+            if (HTTP_POST.equals(req.requestMethod())) {
                 log.info("\n\t>>>> {}", req.body());
             }
         };
     }
 
     public static void main(String[] args) {
-        int port = clarifyPort();
-        if (args != null && args.length > 0) {
-            port = Integer.parseInt(overwriteWithCommandLine(args, Integer.toString(port), "port"));
+        if (args == null) {
+            args = new String[]{};
         }
 
-        String dbName = overwriteWithCommandLine(args, "PaymentStore", "dbName");
+        int port = overwritePortWithCommandLine(
+                args, readPortFromEnvVariableOrDefault()
+        );
+
+        String dbName = overwriteWithCommandLine(
+                args, "PaymentStore", "dbName"
+        );
 
         Guice.createInjector(new PaymentsModule(dbName))
                 .getInstance(PaymentsServiceApp.class)
                 .run(port);
     }
 
-    private static String overwriteWithCommandLine(String[] args, String defaultValue, String argName) {
-        Optional<String> arg = Arrays.stream(args)
-                .filter(it -> it.startsWith(argName + "=")).findFirst();
-
-        return arg.map(s -> s.split("=")[1]).orElse(defaultValue);
+    private static int overwritePortWithCommandLine(String[] args, int port) {
+        return parseInt(overwriteWithCommandLine(
+                args, Integer.toString(port), "port"
+        ));
     }
 
-    private static int clarifyPort() {
+    private static String overwriteWithCommandLine(String[] args, String defaultValue, String argName) {
+
+        return stream(args)
+                .filter(it -> it.startsWith(argName + "="))
+                .findFirst()
+                .map(s -> s.split("=")[1])
+                .orElse(defaultValue);
+    }
+
+    private static int readPortFromEnvVariableOrDefault() {
         String envPort = System.getenv("PORT");
-        return envPort != null ? Integer.parseInt(envPort) : DEFAULT_PORT;
+
+        return envPort != null
+                ? parseInt(envPort)
+                : DEFAULT_PORT;
     }
 }
